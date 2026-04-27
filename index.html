@@ -1426,15 +1426,15 @@ function loadHist(){
     var promColor=prom!='--'?(parseFloat(prom)>=7?'#1B4F35':parseFloat(prom)>=4?'#B7860B':'#C0392B'):'#888';
     var card=document.createElement('div'); card.className='al-card';
     var detId='hdet_'+i;
-    card.setAttribute('data-det', detId);
-    card.querySelector && void 0;
-    card.innerHTML='<div class="al-top" onclick="tglDet(this.closest(\'.al-card\').getAttribute(\'data-det\'))">'
+    var detId='hdet_'+i;
+    card.innerHTML='<div class="al-top">'
       +'<div class="al-name">'+(i+1)+'. '+nombre+'</div>'
       +'<span class="al-pct '+pctCls+'">'+pct+'%</span>'
       +'<span class="al-prom" style="color:'+promColor+'">Prom: '+prom+'</span>'
       +'</div>'
       +'<div id="'+detId+'" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee">'+rowsHtml+'</div>';
-  });
+    (function(did){card.querySelector('.al-top').onclick=function(){tglDet(did);};})(detId);
+    hc.appendChild(card);
 }
 
 function loadPlan(){
