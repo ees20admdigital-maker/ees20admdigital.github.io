@@ -1471,8 +1471,9 @@ function loadPlan(){
   var alumnos=STUDENTS[selC];
   var s=getLS(selC,selM);
   var ncList=(s.reg['nc_list']||[]).slice().sort(function(a,b){return a-b;});
-  document.getElementById('plan-tit').textContent='Planilla — '+curso+' '+mn;
-  var tbody=document.getElementById('plan-body'); tbody.innerHTML='';
+  document.getElementById('plan-tit').textContent='Planilla - '+curso+' '+mn;
+  var tbody=document.getElementById('plan-body');
+  tbody.innerHTML='';
   alumnos.forEach(function(nombre,i){
     var pres=0,nSum=0,nCount=0;
     ncList.forEach(function(nc){
@@ -1480,29 +1481,48 @@ function loadPlan(){
       var est=s.reg['est_'+clave+'_'+i]||'';
       var nota=s.reg['nota_'+clave+'_'+i]||'';
       if(est==='P')pres++;
-      if(nota&&!isNaN(nota)){nSum+=parseFloat(nota);nCount++;}
+      if(nota&&!isNaN(parseFloat(nota))){nSum+=parseFloat(nota);nCount++;}
     });
     var pct=ncList.length>0?Math.round(pres/ncList.length*100):null;
     var prom=nCount>0?(nSum/nCount).toFixed(1):null;
-    var n11=(s.nf&&s.nf['n11_'+i])||''; var n21=(s.nf&&s.nf['n21_'+i])||'';
-    var pi1=(s.nf&&s.nf['pi1_'+i])||''; var n12=(s.nf&&s.nf['n12_'+i])||'';
-    var n22=(s.nf&&s.nf['n22_'+i])||''; var pi2=(s.nf&&s.nf['pi2_'+i])||'';
-    var pf='--';
-    if(prom) pf=prom;
-    var pfCls=pf!='--'?(parseFloat(pf)>=7?'pok':parseFloat(pf)>=4?'pmed':'pmal'):'';
+    var n11=(s.nf&&s.nf['n11_'+i])||'';
+    var n21=(s.nf&&s.nf['n21_'+i])||'';
+    var pi1=(s.nf&&s.nf['pi1_'+i])||'';
+    var n12=(s.nf&&s.nf['n12_'+i])||'';
+    var n22=(s.nf&&s.nf['n22_'+i])||'';
+    var pi2=(s.nf&&s.nf['pi2_'+i])||'';
+    var promStr=prom!==null?prom:'--';
+    var promCls=prom!==null?(parseFloat(prom)>=7?'pok':parseFloat(prom)>=4?'pmed':'pmal'):'';
     var pctStr=pct!==null?pct+'%':'--';
     var pctCls=pct!==null?(pct>=75?'pok':pct>=50?'pmed':'pmal'):'';
     var tr=document.createElement('tr');
-    tr.innerHTML='<td>'+(i+1)+'. '+nombre+'</td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n11+'" placeholder="--" data-key="n11_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n21+'" placeholder="--" data-key="n21_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi1+'" placeholder="--" data-key="pi1_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td class="'+pfCls+'">'+(prom||'--')+'</td>'
-      +'<td class="'+pctCls+'">'+pctStr+'</td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n12+'" placeholder="--" data-key="n12_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n22+'" placeholder="--" data-key="n22_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi2+'" placeholder="--" data-key="pi2_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
-      +'<td class="'+pfCls+'" style="font-size:13px">'+pf+'</td>';
+    var tdNombre=document.createElement('td');
+    tdNombre.textContent=(i+1)+'. '+nombre;
+    tr.appendChild(tdNombre);
+    function mkInput(key,val){
+      var td=document.createElement('td');
+      var inp=document.createElement('input');
+      inp.className='ni'; inp.type='number'; inp.min='1'; inp.max='10'; inp.step='0.5';
+      inp.value=val; inp.placeholder='--';
+      inp.setAttribute('data-key',key);
+      inp.onchange=function(){saveNF(this.getAttribute('data-key'),this.value);};
+      td.appendChild(inp);
+      return td;
+    }
+    function mkTd(txt,cls){
+      var td=document.createElement('td');
+      if(cls)td.className=cls;
+      td.textContent=txt;
+      return td;
+    }
+    tr.appendChild(mkInput('n11_'+i, n11));
+    tr.appendChild(mkInput('n21_'+i, n21));
+    tr.appendChild(mkInput('pi1_'+i, pi1));
+    tr.appendChild(mkTd(promStr, promCls));
+    tr.appendChild(mkTd(pctStr, pctCls));
+    tr.appendChild(mkInput('n12_'+i, n12));
+    tr.appendChild(mkInput('n22_'+i, n22));
+    tr.appendChild(mkInput('pi2_'+i, pi2));
     tbody.appendChild(tr);
   });
 }
