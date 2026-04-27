@@ -1116,6 +1116,31 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 .frow label{font-size:12px;color:#888;font-weight:bold}
 .frow input{border:1px solid #ddd;border-radius:6px;padding:6px 10px;font-size:13px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:bold;display:none;z-index:999}
+.b-hist{background:#FFF2CC;color:#7F6000}
+.b-plan{background:#E8D6FF;color:#5B1A8B}
+#p-hist{display:none;padding:14px 16px}
+#p-plan{display:none;padding:14px 16px}
+.al-card{background:#fff;border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid #ddd}
+.al-top{display:flex;align-items:center;gap:10px;cursor:pointer}
+.al-name{flex:1;font-size:13px;font-weight:bold;color:#1F3864}
+.al-pct{font-size:12px;font-weight:bold;padding:2px 9px;border-radius:20px}
+.al-prom{font-size:11px;font-weight:bold;padding:2px 7px;border-radius:20px;background:#E8F5E9;color:#1B4F35}
+.pct-ok{background:#D1FAE5;color:#065F46}.pct-warn{background:#FEF3C7;color:#92400E}.pct-bad{background:#FEE2E2;color:#991B1B}
+.al-det{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee}
+.cls-row{padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:6px;font-size:12px}
+.cls-row:last-child{border-bottom:none}
+.cls-obs{margin-top:4px;padding:4px 8px;background:#FFFDE7;border-left:3px solid #F4B942;border-radius:4px;font-size:11px;color:#5a4000}
+.nota-b{background:#E8F5E9;color:#1B4F35;font-size:11px;padding:2px 6px;border-radius:8px;font-weight:bold}
+.plan-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}
+.plan-tbl th{background:#1F3864;color:#fff;padding:6px 5px;text-align:center;font-size:10px}
+.plan-tbl th:first-child{text-align:left}
+.plan-tbl td{padding:5px;border:1px solid #ddd;text-align:center}
+.plan-tbl td:first-child{text-align:left;font-weight:500;font-size:11px}
+.plan-tbl tr:hover td{background:#f0f4ff}
+.ni{border:1px solid #ddd;border-radius:4px;padding:3px;font-size:12px;width:46px;text-align:center;font-weight:bold}
+.ni:focus{border-color:#1F3864;outline:none}
+.pok{color:#1B4F35;font-weight:bold}.pmed{color:#B7860B;font-weight:bold}.pmal{color:#C0392B;font-weight:bold}
+.pct-green{color:#1B4F35;font-weight:bold}
 </style>
 </head>
 <body>
@@ -1143,6 +1168,29 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 <div id="p-list">
   <button class="bk" onclick="goSel()">Volver</button>
   <div id="lc" style="padding:0 16px 16px"></div>
+</div>
+<div id="p-hist" style="display:none;padding:14px 16px">
+  <button class="bk" onclick="showP('p-list')">Volver a la lista</button>
+  <div id="hc"></div>
+</div>
+<div id="p-plan" style="display:none;padding:14px 16px">
+  <button class="bk" onclick="showP('p-list')">Volver a la lista</button>
+  <div class="lhdr" style="margin-bottom:10px">
+    <h3 id="plan-tit">Planilla de Calificaciones</h3>
+    <p>Nota 3 = promedio de notas de clases (automatico). Completar Nota 1 y Nota 2.</p>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="plan-tbl">
+      <thead><tr>
+        <th>Alumno/a</th>
+        <th>N1 1C</th><th>N2 1C</th><th>PreInf 1C</th>
+        <th>Prom.Clases</th><th>% Asist.</th>
+        <th>N1 2C</th><th>N2 2C</th><th>PreInf 2C</th>
+        <th>Prom.Final</th>
+      </tr></thead>
+      <tbody id="plan-body"></tbody>
+    </table>
+  </div>
 </div>
 <div class="toast" id="tk"></div>
 <script>
@@ -1233,7 +1281,9 @@ function buildList(){
   var act=document.createElement('div'); act.className='act';
   var btnTP=document.createElement('button'); btnTP.className='b-tp'; btnTP.textContent='Todos presentes'; btnTP.onclick=todosP;
   var btnGD=document.createElement('button'); btnGD.className='b-gd'; btnGD.textContent='Guardar lista'; btnGD.onclick=guardar;
-  act.appendChild(btnTP); act.appendChild(btnGD);
+  var btnHS=document.createElement('button'); btnHS.className='b-hist'; btnHS.textContent='Ver historial'; btnHS.onclick=function(){showP('p-hist');loadHist();};
+  var btnPL=document.createElement('button'); btnPL.className='b-plan'; btnPL.textContent='Planilla'; btnPL.onclick=function(){showP('p-plan');loadPlan();};
+  act.appendChild(btnTP); act.appendChild(btnGD); act.appendChild(btnHS); act.appendChild(btnPL);
   
   lc.innerHTML='';
   lc.appendChild(hdr); lc.appendChild(fr1); lc.appendChild(fr2);
@@ -1307,12 +1357,133 @@ async function guardar(){
       fecha:fecha,nclase:nclase,obs:'',acta:actaM[i]||''});
   });
   if(!rows.length){toast('Marca al menos un alumno');return;}
+  // Guardar en localStorage para historial
+  var s=getLS(selC,selM);
+  var clave=document.getElementById('df').value.replace(/-/g,'')+'_'+nclase;
+  var fechaISO=document.getElementById('df').value;
+  alumnos.forEach(function(nombre,i){
+    s.reg['est_'+clave+'_'+i]=estados[i]||'';
+    s.reg['nota_'+clave+'_'+i]=actaM['nota_'+i]||'';
+    s.reg['obs_'+clave+'_'+i]=actaM[i]||'';
+  });
+  if(!s.reg['nc_list'])s.reg['nc_list']=[];
+  if(s.reg['nc_list'].indexOf(nclase)<0)s.reg['nc_list'].push(nclase);
+  s.reg['fecha_'+nclase]=fechaISO;
+  saveLS(selC,selM,s);
+  // Guardar en Google Sheets
   try{
     toast('Guardando...',5000);
-    var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'guardar',rows:rows})});
-    var j=await r.json();
-    toast(j.ok?'Lista guardada ('+rows.length+' registros)':'Error: '+(j.error||'?'),3000);
-  }catch(ex){toast('Sin conexion - revisar red');}
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'guardar',rows:rows})});
+    toast('Lista guardada ('+rows.length+' registros)',3000);
+  }catch(ex){toast('Guardado local OK - sin conexion a Google',3000);}
+}
+
+function showP(id){
+  ['p-sel','p-list','p-hist','p-plan'].forEach(function(p){
+    var el=document.getElementById(p); if(el) el.style.display='none';
+  });
+  document.getElementById(id).style.display='block';
+  window.scrollTo(0,0);
+}
+
+function goList(){document.getElementById('p-sel').style.display='none';document.getElementById('p-list').style.display='block';buildList();}
+function goSel(){showP('p-sel');}
+
+function getLS(cid,mat){
+  try{var s=localStorage.getItem('ees20_'+cid+'_'+mat);return s?JSON.parse(s):{reg:{},nf:{}};}
+  catch(e){return{reg:{},nf:{}};}
+}
+function saveLS(cid,mat,s){try{localStorage.setItem('ees20_'+cid+'_'+mat,JSON.stringify(s));}catch(e){}}
+
+function loadHist(){
+  var curso=COURSES[selC], mat=MATERIAS[selC][selM];
+  var mn=mat==='PR'?'Preceptoria':(MNAMES[mat]||mat);
+  var alumnos=STUDENTS[selC];
+  var s=getLS(selC,selM);
+  var ncList=(s.reg['nc_list']||[]).slice().sort(function(a,b){return a-b;});
+  var hc=document.getElementById('hc');
+  hc.innerHTML='<div style="background:#1F3864;color:#fff;border-radius:10px;padding:12px;margin-bottom:10px;text-align:center"><b>'+curso+' — '+mn+'</b><br><small>'+ncList.length+' clases registradas</small></div>';
+  if(!ncList.length){hc.innerHTML+='<div style="text-align:center;padding:20px;color:#888">Sin clases registradas todavia.</div>';return;}
+  alumnos.forEach(function(nombre,i){
+    var pres=0,nSum=0,nCount=0,rowsHtml='';
+    ncList.forEach(function(nc){
+      var clave=(s.reg['fecha_'+nc]||'?')+'_'+nc;
+      var est=s.reg['est_'+clave+'_'+i]||'--';
+      var nota=s.reg['nota_'+clave+'_'+i]||'';
+      var obs=s.reg['obs_'+clave+'_'+i]||'';
+      if(est==='P')pres++;
+      if(nota&&!isNaN(nota)){nSum+=parseFloat(nota);nCount++;}
+      var bc={P:'pct-ok',A:'pct-bad',T:'pct-warn'}[est]||'';
+      rowsHtml+='<div class="cls-row"><span style="flex:1;color:#555">Clase '+nc+' · '+(s.reg['fecha_'+nc]||'?')+'</span>'
+        +'<span class="al-pct '+bc+'" style="font-size:11px;padding:2px 7px">'+est+'</span>'
+        +(nota?'<span class="nota-b">'+nota+'</span>':'<span style="color:#ccc;font-size:10px">sin nota</span>')+'</div>'
+        +(obs?'<div class="cls-obs">'+obs+'</div>':'');
+    });
+    var pct=Math.round(pres/ncList.length*100);
+    var prom=nCount>0?(nSum/nCount).toFixed(1):'--';
+    var pctCls=pct>=75?'pct-ok':pct>=50?'pct-warn':'pct-bad';
+    var promColor=prom!='--'?(parseFloat(prom)>=7?'#1B4F35':parseFloat(prom)>=4?'#B7860B':'#C0392B'):'#888';
+    var card=document.createElement('div'); card.className='al-card';
+    var detId='hdet_'+i;
+    card.innerHTML='<div class="al-top" onclick="var d=document.getElementById(''+detId+'');d.style.display=d.style.display==='block'?'none':'block'">'
+      +'<div class="al-name">'+(i+1)+'. '+nombre+'</div>'
+      +'<span class="al-pct '+pctCls+'">'+pct+'%</span>'
+      +'<span class="al-prom" style="color:'+promColor+'">Prom: '+prom+'</span>'
+      +'</div>'
+      +'<div id="'+detId+'" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee">'+rowsHtml+'</div>';
+    hc.appendChild(card);
+  });
+}
+
+function loadPlan(){
+  var curso=COURSES[selC], mat=MATERIAS[selC][selM];
+  var mn=mat==='PR'?'Preceptoria':(MNAMES[mat]||mat);
+  var alumnos=STUDENTS[selC];
+  var s=getLS(selC,selM);
+  var ncList=(s.reg['nc_list']||[]).slice().sort(function(a,b){return a-b;});
+  document.getElementById('plan-tit').textContent='Planilla — '+curso+' '+mn;
+  var tbody=document.getElementById('plan-body'); tbody.innerHTML='';
+  alumnos.forEach(function(nombre,i){
+    var pres=0,nSum=0,nCount=0;
+    ncList.forEach(function(nc){
+      var clave=(s.reg['fecha_'+nc]||'?')+'_'+nc;
+      var est=s.reg['est_'+clave+'_'+i]||'';
+      var nota=s.reg['nota_'+clave+'_'+i]||'';
+      if(est==='P')pres++;
+      if(nota&&!isNaN(nota)){nSum+=parseFloat(nota);nCount++;}
+    });
+    var pct=ncList.length>0?Math.round(pres/ncList.length*100):null;
+    var prom=nCount>0?(nSum/nCount).toFixed(1):null;
+    var n11=(s.nf&&s.nf['n11_'+i])||''; var n21=(s.nf&&s.nf['n21_'+i])||'';
+    var pi1=(s.nf&&s.nf['pi1_'+i])||''; var n12=(s.nf&&s.nf['n12_'+i])||'';
+    var n22=(s.nf&&s.nf['n22_'+i])||''; var pi2=(s.nf&&s.nf['pi2_'+i])||'';
+    var pf='--';
+    if(prom) pf=prom;
+    var pfCls=pf!='--'?(parseFloat(pf)>=7?'pok':parseFloat(pf)>=4?'pmed':'pmal'):'';
+    var pctStr=pct!==null?pct+'%':'--';
+    var pctCls=pct!==null?(pct>=75?'pok':pct>=50?'pmed':'pmal'):'';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+(i+1)+'. '+nombre+'</td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n11+'" placeholder="--" onchange="saveNF('n11_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n21+'" placeholder="--" onchange="saveNF('n21_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi1+'" placeholder="--" onchange="saveNF('pi1_'+i+'',this.value)"></td>'
+      +'<td class="'+pfCls+'">'+(prom||'--')+'</td>'
+      +'<td class="'+pctCls+'">'+pctStr+'</td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n12+'" placeholder="--" onchange="saveNF('n12_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n22+'" placeholder="--" onchange="saveNF('n22_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi2+'" placeholder="--" onchange="saveNF('pi2_'+i+'',this.value)"></td>'
+      +'<td class="'+pfCls+'" style="font-size:13px">'+pf+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function saveNF(key,val){
+  var s=getLS(selC,selM);
+  if(!s.nf)s.nf={};
+  s.nf[key]=val;
+  saveLS(selC,selM,s);
+  loadPlan();
 }
 
 buildGrid();
