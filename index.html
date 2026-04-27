@@ -1426,13 +1426,14 @@ function loadHist(){
     var promColor=prom!='--'?(parseFloat(prom)>=7?'#1B4F35':parseFloat(prom)>=4?'#B7860B':'#C0392B'):'#888';
     var card=document.createElement('div'); card.className='al-card';
     var detId='hdet_'+i;
-    card.innerHTML='<div class="al-top" onclick="var d=document.getElementById(''+detId+'');d.style.display=d.style.display==='block'?'none':'block'">'
+    card.setAttribute('data-det', detId);
+    card.querySelector && void 0;
+    card.innerHTML='<div class="al-top" onclick="tglDet(this.closest(\'.al-card\').getAttribute(\'data-det\'))">'
       +'<div class="al-name">'+(i+1)+'. '+nombre+'</div>'
       +'<span class="al-pct '+pctCls+'">'+pct+'%</span>'
       +'<span class="al-prom" style="color:'+promColor+'">Prom: '+prom+'</span>'
       +'</div>'
       +'<div id="'+detId+'" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee">'+rowsHtml+'</div>';
-    hc.appendChild(card);
   });
 }
 
@@ -1465,14 +1466,14 @@ function loadPlan(){
     var pctCls=pct!==null?(pct>=75?'pok':pct>=50?'pmed':'pmal'):'';
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+(i+1)+'. '+nombre+'</td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n11+'" placeholder="--" onchange="saveNF('n11_'+i+'',this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n21+'" placeholder="--" onchange="saveNF('n21_'+i+'',this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi1+'" placeholder="--" onchange="saveNF('pi1_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n11+'" placeholder="--" data-key="n11_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n21+'" placeholder="--" data-key="n21_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi1+'" placeholder="--" data-key="pi1_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
       +'<td class="'+pfCls+'">'+(prom||'--')+'</td>'
       +'<td class="'+pctCls+'">'+pctStr+'</td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n12+'" placeholder="--" onchange="saveNF('n12_'+i+'',this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n22+'" placeholder="--" onchange="saveNF('n22_'+i+'',this.value)"></td>'
-      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi2+'" placeholder="--" onchange="saveNF('pi2_'+i+'',this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n12+'" placeholder="--" data-key="n12_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+n22+'" placeholder="--" data-key="n22_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
+      +'<td><input class="ni" type="number" min="1" max="10" step="0.5" value="'+pi2+'" placeholder="--" data-key="pi2_'+i+'" onchange="saveNF(this.dataset.key,this.value)"></td>'
       +'<td class="'+pfCls+'" style="font-size:13px">'+pf+'</td>';
     tbody.appendChild(tr);
   });
@@ -1484,6 +1485,11 @@ function saveNF(key,val){
   s.nf[key]=val;
   saveLS(selC,selM,s);
   loadPlan();
+}
+
+function tglDet(id){
+  var d=document.getElementById(id);
+  if(d) d.style.display=d.style.display==='block'?'none':'block';
 }
 
 buildGrid();
