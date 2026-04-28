@@ -89,7 +89,24 @@
       "ASENCIO ALMA CATALINA",
       "Baez Tomas Leonardo",
       "Baez,Alexia",
-      "Balceda Eian Valentin"
+      "Balceda Eian Valentin",
+      "DIAZ MIA",
+      "FERNÁNDEZ RODRÍGUEZ LIZ GUADALUPE",
+      "FLORES LUDMILA AYLEN",
+      "GAUNA  JUAREZ  DANTE JEREMÍAS",
+      "GAUTO",
+      "GEREZ LUCIANO NATANAEL",
+      "GODOY SANTINO LEONEL",
+      "LUCENA Julian",
+      "MORALES AGOSTINA ELUNEY",
+      "MOREYRA BRUNO",
+      "MUÑOZ MATEO DANIEL",
+      "PALACIOS SANTINO THIAN",
+      "RODRÍGUEZ MÍA LUJÁN",
+      "ROJAS KIARA MARTINA",
+      "ROJAS LUNA VALENTINA",
+      "SEGOVIA TAIEL BASTIÁN",
+      "TAMOLA CIRO JOAQUÍN"
     ],
     [
       "BOCCUTO IAN JOAQUÍN",
@@ -110,8 +127,12 @@
       "ROBLES RAMIREZ BENJAMÍN",
       "RODRÍGUEZ MATEO VALENTINO",
       "SEGURA SCHAUS AZUL",
-      "TANASZEWIEZ IVÁN",
-      "VILLALBA SOFÍA EMILIA"
+      "DIAZ THIAGO",
+      "VILLALBA SOFÍA EMILIA",
+      "MONTEIRA ELIAS",
+      "MONZON LILA",
+      "TORRES MALENA",
+      "ZARZA BAUKMTIISTA"
     ],
     [
       "AGüERO, ALMA MILENA",
@@ -397,7 +418,8 @@
       "Torrez Lautaro",
       "Vera Aguirre",
       "Villar Luisana",
-      "Álvarez Luana"
+      "Álvarez Luana",
+      "PEREIRA FRANCESCA??"
     ],
     [
       "ALBORNOZ, BENJAMIN",
@@ -567,9 +589,7 @@
       "RAMOS, MARTINA",
       "RIOS CABALLERO, ANDRES",
       "VELARDEZ, NEREA",
-      "VIZGARRA, CRISTIAN DAVID",
-      "ROSAS LORENZO ASHLEY",
-      "MOUZO ZAIRA JAZMIN"
+      "VIZGARRA, CRISTIAN DAVID"
     ],
     [
       "ACOSTA,LUCA MARTIN",
@@ -783,7 +803,7 @@
       "GGF",
       "HTR",
       "IGS",
-      "MTM",
+      "MCS",
       "PLG"
     ],
     [
@@ -796,7 +816,7 @@
       "GGF",
       "HTR",
       "IGS",
-      "MTM",
+      "MCS",
       "PLG"
     ],
     [
@@ -809,7 +829,7 @@
       "GGF",
       "HTR",
       "IGS",
-      "MTM",
+      "MCS",
       "PLG"
     ],
     [
@@ -822,7 +842,7 @@
       "GGF",
       "HTR",
       "IGS",
-      "MTM",
+      "MCS",
       "PLG"
     ],
     [
@@ -994,6 +1014,32 @@
       "TYC"
     ]
   ],
+  "turnos": [
+    "M",
+    "M",
+    "T",
+    "T",
+    "M",
+    "M",
+    "T",
+    "T",
+    "M",
+    "M",
+    "T",
+    "T",
+    "M",
+    "M",
+    "T",
+    "T",
+    "M",
+    "M",
+    "T",
+    "T",
+    "M",
+    "T",
+    "T",
+    "M"
+  ],
   "mnames": {
     "ART": "Artes Visuales",
     "CDC": "Cs. de la Ciudadania",
@@ -1024,33 +1070,7 @@
     "FIS": "Fisica",
     "PYC": "Probabilidad y Estadistica",
     "PR": "Preceptoria"
-  },
-  "turnos": [
-    "M",
-    "M",
-    "T",
-    "T",
-    "M",
-    "M",
-    "T",
-    "T",
-    "M",
-    "M",
-    "T",
-    "T",
-    "M",
-    "T",
-    "M",
-    "T",
-    "M",
-    "T",
-    "M",
-    "T",
-    "M",
-    "M",
-    "T",
-    "T"
-  ]
+  }
 }</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1091,10 +1111,11 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 .stat{flex:1;background:#fff;border-radius:8px;padding:8px;text-align:center;border:1px solid #ddd}
 .sn{font-size:18px;font-weight:bold}
 .sl{font-size:9px;color:#888;text-transform:uppercase}
-.act{display:flex;gap:8px;margin-bottom:10px}
-.act button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer}
+.act{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.act button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;min-width:120px}
 .b-tp{background:#D1FAE5;color:#065F46}
 .b-gd{background:#1F3864;color:#fff}
+.b-bk{background:#FFF2CC;color:#7F6000;border:2px solid #F4B942!important}
 .ar{background:#fff;border-radius:8px;padding:10px 12px;margin-bottom:5px;border:1px solid #ddd;border-left:4px solid #ddd;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ar.P{border-left-color:#1B7A3E!important;background:#F0FFF4}
 .ar.A{border-left-color:#C0392B!important;background:#FFF5F5}
@@ -1116,31 +1137,15 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 .frow label{font-size:12px;color:#888;font-weight:bold}
 .frow input{border:1px solid #ddd;border-radius:6px;padding:6px 10px;font-size:13px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:bold;display:none;z-index:999}
-.b-hist{background:#FFF2CC;color:#7F6000}
-.b-plan{background:#E8D6FF;color:#5B1A8B}
-#p-hist{display:none;padding:14px 16px}
-#p-plan{display:none;padding:14px 16px}
-.al-card{background:#fff;border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid #ddd}
-.al-top{display:flex;align-items:center;gap:10px;cursor:pointer}
-.al-name{flex:1;font-size:13px;font-weight:bold;color:#1F3864}
-.al-pct{font-size:12px;font-weight:bold;padding:2px 9px;border-radius:20px}
-.al-prom{font-size:11px;font-weight:bold;padding:2px 7px;border-radius:20px;background:#E8F5E9;color:#1B4F35}
-.pct-ok{background:#D1FAE5;color:#065F46}.pct-warn{background:#FEF3C7;color:#92400E}.pct-bad{background:#FEE2E2;color:#991B1B}
-.al-det{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee}
-.cls-row{padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:6px;font-size:12px}
-.cls-row:last-child{border-bottom:none}
-.cls-obs{margin-top:4px;padding:4px 8px;background:#FFFDE7;border-left:3px solid #F4B942;border-radius:4px;font-size:11px;color:#5a4000}
-.nota-b{background:#E8F5E9;color:#1B4F35;font-size:11px;padding:2px 6px;border-radius:8px;font-weight:bold}
-.plan-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}
-.plan-tbl th{background:#1F3864;color:#fff;padding:6px 5px;text-align:center;font-size:10px}
-.plan-tbl th:first-child{text-align:left}
-.plan-tbl td{padding:5px;border:1px solid #ddd;text-align:center}
-.plan-tbl td:first-child{text-align:left;font-weight:500;font-size:11px}
-.plan-tbl tr:hover td{background:#f0f4ff}
-.ni{border:1px solid #ddd;border-radius:4px;padding:3px;font-size:12px;width:46px;text-align:center;font-weight:bold}
-.ni:focus{border-color:#1F3864;outline:none}
-.pok{color:#1B4F35;font-weight:bold}.pmed{color:#B7860B;font-weight:bold}.pmal{color:#C0392B;font-weight:bold}
-.pct-green{color:#1B4F35;font-weight:bold}
+.bk-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.bk-modal.show{display:flex}
+.bk-box{background:#fff;border-radius:12px;padding:20px;width:90%;max-width:400px;max-height:80vh;overflow-y:auto}
+.bk-box h3{color:#1F3864;font-size:15px;margin-bottom:12px}
+.bk-box pre{background:#f5f5f5;padding:10px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-break:break-all;margin-bottom:12px;max-height:300px;overflow-y:auto}
+.bk-btns{display:flex;gap:8px}
+.bk-btns button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer}
+.bk-copy{background:#1F3864;color:#fff}
+.bk-close{background:#f0f4f8;color:#333}
 </style>
 </head>
 <body>
@@ -1153,7 +1158,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
   <div class="hero"><h2>Lista de Asistencia 2026</h2><p>Selecciona tu curso y materia</p></div>
   <div class="lbl">Turno</div>
   <div class="tfilt">
-    <button class="tf-m" id="btn-M" onclick="filtT('M')">Manana</button>
+    <button class="tf-m" id="btn-M" onclick="filtT('M')">Mañana</button>
     <button class="tf-t" id="btn-T" onclick="filtT('T')">Tarde</button>
     <button class="tf-a tf-on" id="btn-X" onclick="filtT('')">Todos</button>
   </div>
@@ -1166,33 +1171,23 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
   <button class="gobtn" id="gobtn" disabled onclick="goList()">Tomar lista</button>
 </div>
 <div id="p-list">
-  <button class="bk" onclick="goSel()">Volver</button>
+  <button class="bk" onclick="goSel()">← Volver</button>
   <div id="lc" style="padding:0 16px 16px"></div>
 </div>
-<div id="p-hist" style="display:none;padding:14px 16px">
-  <button class="bk" onclick="showP('p-list')">Volver a la lista</button>
-  <div id="hc"></div>
-</div>
-<div id="p-plan" style="display:none;padding:14px 16px">
-  <button class="bk" onclick="showP('p-list')">Volver a la lista</button>
-  <div class="lhdr" style="margin-bottom:10px">
-    <h3 id="plan-tit">Planilla de Calificaciones</h3>
-    <p>Nota 3 = promedio de notas de clases (automatico). Completar Nota 1 y Nota 2.</p>
-  </div>
-  <div style="overflow-x:auto">
-    <table class="plan-tbl">
-      <thead><tr>
-        <th>Alumno/a</th>
-        <th>N1 1C</th><th>N2 1C</th><th>PreInf 1C</th>
-        <th>Prom.Clases</th><th>% Asist.</th>
-        <th>N1 2C</th><th>N2 2C</th><th>PreInf 2C</th>
-        <th>Prom.Final</th>
-      </tr></thead>
-      <tbody id="plan-body"></tbody>
-    </table>
-  </div>
-</div>
 <div class="toast" id="tk"></div>
+
+<!-- MODAL BACKUP -->
+<div class="bk-modal" id="bk-modal">
+  <div class="bk-box">
+    <h3>💾 Backup de lista</h3>
+    <pre id="bk-content"></pre>
+    <div class="bk-btns">
+      <button class="bk-copy" onclick="copiarBackup()">📋 Copiar</button>
+      <button class="bk-close" onclick="cerrarBackup()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var _d = JSON.parse(document.getElementById('D').textContent);
 var COURSES  = _d.courses;
@@ -1246,7 +1241,7 @@ function selCourse(idx){
   });
   document.getElementById('matsec').style.display='block';
   document.getElementById('gobtn').disabled=true;
-  document.getElementById('bsub').textContent=COURSES[idx]+' - '+(TURNOS[idx]==='M'?'Manana':'Tarde');
+  document.getElementById('bsub').textContent=COURSES[idx]+' - '+(TURNOS[idx]==='M'?'Mañana':'Tarde');
 }
 
 function selMat(idx){
@@ -1264,43 +1259,39 @@ function buildList(){
   var lc=document.getElementById('lc');
 
   var hdr=document.createElement('div'); hdr.className='lhdr';
-  hdr.innerHTML='<h3>'+curso+' - '+mn+'</h3><p>'+(t==='M'?'Manana':'Tarde')+'</p>';
-  
+  hdr.innerHTML='<h3>'+curso+' - '+mn+'</h3><p>'+(t==='M'?'Mañana':'Tarde')+'</p>';
+
   var fr1=document.createElement('div'); fr1.className='frow';
   fr1.innerHTML='<label>Fecha:</label><input type="date" id="df" value="'+toISO()+'">';
-  
+
   var fr2=document.createElement('div'); fr2.className='frow';
-  fr2.innerHTML='<label>N clase:</label><input type="number" id="nc" value="1" min="1" max="99" style="width:70px;text-align:center">';
-  
+  fr2.innerHTML='<label>N° clase:</label><input type="number" id="nc" value="1" min="1" max="99" style="width:70px;text-align:center">';
+
   var stats=document.createElement('div'); stats.className='stats';
   stats.innerHTML='<div class="stat"><div class="sn" id="cp" style="color:#1B7A3E">0</div><div class="sl">Presentes</div></div>'
     +'<div class="stat"><div class="sn" id="ca" style="color:#C0392B">0</div><div class="sl">Ausentes</div></div>'
     +'<div class="stat"><div class="sn" id="ct" style="color:#B7860B">0</div><div class="sl">Tardanzas</div></div>'
-    +'<div class="stat"><div class="sn" id="cs" style="color:#666">0</div><div class="sl">Sin trabajar</div></div>';
-  
+    +'<div class="stat"><div class="sn" id="cs" style="color:#666">0</div><div class="sl">Sin marcar</div></div>';
+
   var act=document.createElement('div'); act.className='act';
-  var btnTP=document.createElement('button'); btnTP.className='b-tp'; btnTP.textContent='Todos presentes'; btnTP.onclick=todosP;
-  var btnGD=document.createElement('button'); btnGD.className='b-gd'; btnGD.textContent='Guardar lista'; btnGD.onclick=guardar;
-  var btnHS=document.createElement('button'); btnHS.className='b-hist'; btnHS.textContent='Ver historial'; btnHS.onclick=function(){showP('p-hist');loadHist();};
-  var btnPL=document.createElement('button'); btnPL.className='b-plan'; btnPL.textContent='Planilla'; btnPL.onclick=function(){showP('p-plan');loadPlan();};
-  act.appendChild(btnTP); act.appendChild(btnGD); act.appendChild(btnHS); act.appendChild(btnPL);
-  
+  var btnTP=document.createElement('button'); btnTP.className='b-tp'; btnTP.textContent='✅ Todos presentes'; btnTP.onclick=todosP;
+  var btnBK=document.createElement('button'); btnBK.className='b-bk'; btnBK.textContent='💾 Backup'; btnBK.onclick=abrirBackup;
+  var btnGD=document.createElement('button'); btnGD.className='b-gd'; btnGD.textContent='📤 Guardar lista'; btnGD.onclick=guardar;
+  act.appendChild(btnTP); act.appendChild(btnBK); act.appendChild(btnGD);
+
   lc.innerHTML='';
   lc.appendChild(hdr); lc.appendChild(fr1); lc.appendChild(fr2);
   lc.appendChild(stats); lc.appendChild(act);
-  
+
   alumnos.forEach(function(nombre,i){
     var ar=document.createElement('div'); ar.className='ar'; ar.id='ar'+i;
-    
     var num=document.createElement('div'); num.className='anum'; num.textContent=i+1;
     var nm=document.createElement('div'); nm.className='aname'; nm.textContent=nombre;
-    
     var abtn=document.createElement('button'); abtn.className='acta-btn'; abtn.textContent='📎';
     abtn.onclick=(function(idx){return function(){
       var box=document.getElementById('acta-box-'+idx);
       box.style.display=box.style.display==='block'?'none':'block';
     };})(i);
-    
     var bgrp=document.createElement('div'); bgrp.className='bgrp';
     ['P','A','T','S'].forEach(function(e){
       var b=document.createElement('button');
@@ -1308,17 +1299,10 @@ function buildList(){
       b.onclick=(function(idx,est){return function(){setE(idx,est);};})(i,e);
       bgrp.appendChild(b);
     });
-    
-    var ni=document.createElement('input');
-    ni.type='number'; ni.min='1'; ni.max='10'; ni.step='0.5';
-    ni.style.cssText='border:2px solid #D1FAE5;border-radius:6px;padding:5px;font-size:14px;font-weight:bold;width:54px;text-align:center;color:#1B4F35;background:#F0FFF4;flex-shrink:0';
-    ni.placeholder='--'; ni.title='Nota de la clase (1-10)';
-    ni.oninput=(function(idx){return function(){actaM['nota_'+idx]=this.value;};})(i);
-    ar.appendChild(num); ar.appendChild(nm); ar.appendChild(abtn); ar.appendChild(bgrp); ar.appendChild(ni);
+    ar.appendChild(num); ar.appendChild(nm); ar.appendChild(abtn); ar.appendChild(bgrp);
     lc.appendChild(ar);
-    
     var abox=document.createElement('div'); abox.className='acta-box'; abox.id='acta-box-'+i;
-    var albl=document.createElement('label'); albl.textContent='Acta / Observacion libre';
+    var albl=document.createElement('label'); albl.textContent='Acta / Observación libre';
     var ata=document.createElement('textarea'); ata.placeholder='Escribe lo que quieras sobre este alumno...';
     ata.oninput=(function(idx){return function(){actaM[idx]=this.value;};})(i);
     abox.appendChild(albl); abox.appendChild(ata);
@@ -1334,6 +1318,7 @@ function setE(i,e){
     var b=document.getElementById('b'+x+i);
     if(b) b.classList.toggle('on',x===e);
   });
+  updStats();
 }
 
 function todosP(){STUDENTS[selC].forEach(function(_,i){setE(i,'P');});}
@@ -1347,9 +1332,49 @@ function updStats(){
   document.getElementById('cs').textContent=c.S;
 }
 
-// Update stats on setE
-var _setE=setE;
-setE=function(i,e){_setE(i,e);updStats();};
+// ── BACKUP ───────────────────────────────────────────────────
+function abrirBackup(){
+  var curso=COURSES[selC], mat=MATERIAS[selC][selM];
+  var mn=mat==='PR'?'Preceptoria':(MNAMES[mat]||mat);
+  var fecha=document.getElementById('df')?document.getElementById('df').value:'';
+  var nclase=document.getElementById('nc')?document.getElementById('nc').value:'';
+  var alumnos=STUDENTS[selC];
+  var lineas=['=== BACKUP LISTA ==='];
+  lineas.push('Curso: '+curso+' | Materia: '+mn);
+  lineas.push('Fecha: '+fmtD(fecha)+' | Clase N°: '+nclase);
+  lineas.push('');
+  var presentes=[],ausentes=[],tardanzas=[],sinMarcar=[];
+  alumnos.forEach(function(nombre,i){
+    var e=estados[i]||'';
+    var obs=actaM[i]?(' ['+actaM[i]+']'):'';
+    if(e==='P') presentes.push((i+1)+'. '+nombre+obs);
+    else if(e==='A') ausentes.push((i+1)+'. '+nombre+obs);
+    else if(e==='T') tardanzas.push((i+1)+'. '+nombre+obs);
+    else sinMarcar.push((i+1)+'. '+nombre);
+  });
+  if(presentes.length){ lineas.push('PRESENTES ('+presentes.length+'):'); presentes.forEach(function(l){lineas.push('  '+l);}); lineas.push(''); }
+  if(ausentes.length){ lineas.push('AUSENTES ('+ausentes.length+'):'); ausentes.forEach(function(l){lineas.push('  '+l);}); lineas.push(''); }
+  if(tardanzas.length){ lineas.push('TARDANZAS ('+tardanzas.length+'):'); tardanzas.forEach(function(l){lineas.push('  '+l);}); lineas.push(''); }
+  if(sinMarcar.length){ lineas.push('SIN MARCAR ('+sinMarcar.length+'):'); sinMarcar.forEach(function(l){lineas.push('  '+l);}); }
+  document.getElementById('bk-content').textContent=lineas.join('\n');
+  document.getElementById('bk-modal').classList.add('show');
+}
+
+function copiarBackup(){
+  var txt=document.getElementById('bk-content').textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(function(){toast('Copiado al portapapeles');});
+  } else {
+    var ta=document.createElement('textarea');
+    ta.value=txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); toast('Copiado');
+  }
+}
+
+function cerrarBackup(){
+  document.getElementById('bk-modal').classList.remove('show');
+}
 
 async function guardar(){
   var curso=COURSES[selC], mat=MATERIAS[selC][selM];
@@ -1362,184 +1387,12 @@ async function guardar(){
       fecha:fecha,nclase:nclase,obs:'',acta:actaM[i]||''});
   });
   if(!rows.length){toast('Marca al menos un alumno');return;}
-  // Guardar en localStorage para historial
-  var s=getLS(selC,selM);
-  var fechaISO=document.getElementById('df').value;
-  var clave=fechaISO+'_'+nclase;
-  alumnos.forEach(function(nombre,i){
-    s.reg['est_'+clave+'_'+i]=estados[i]||'';
-    s.reg['nota_'+clave+'_'+i]=actaM['nota_'+i]||'';
-    s.reg['obs_'+clave+'_'+i]=actaM[i]||'';
-  });
-  if(!s.reg['nc_list'])s.reg['nc_list']=[];
-  if(s.reg['nc_list'].indexOf(nclase)<0)s.reg['nc_list'].push(nclase);
-  s.reg['fecha_'+nclase]=fechaISO;
-  saveLS(selC,selM,s);
-  // Guardar en Google Sheets
   try{
     toast('Guardando...',5000);
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'guardar',rows:rows})});
-    toast('Lista guardada ('+rows.length+' registros)',3000);
-  }catch(ex){toast('Guardado local OK - sin conexion a Google',3000);}
-}
-
-function showP(id){
-  ['p-sel','p-list','p-hist','p-plan'].forEach(function(p){
-    var el=document.getElementById(p); if(el) el.style.display='none';
-  });
-  document.getElementById(id).style.display='block';
-  window.scrollTo(0,0);
-}
-
-function goList(){document.getElementById('p-sel').style.display='none';document.getElementById('p-list').style.display='block';buildList();}
-function goSel(){showP('p-sel');}
-
-function getLS(cid,mat){
-  try{var k='e20_'+cid+'_'+mat;var s=localStorage.getItem(k);return s?JSON.parse(s):{reg:{},nf:{}};}
-  catch(e){return{reg:{},nf:{}};}
-}
-function saveLS(cid,mat,s){
-  try{localStorage.setItem('e20_'+cid+'_'+mat,JSON.stringify(s));}catch(e){}
-}
-
-function loadHist(){
-  var curso=COURSES[selC], mat=MATERIAS[selC][selM];
-  var mn=mat==='PR'?'Preceptoria':(MNAMES[mat]||mat);
-  var alumnos=STUDENTS[selC];
-  var s=getLS(selC,selM);
-  var ncList=(s.reg['nc_list']||[]).slice().sort(function(a,b){return a-b;});
-  var hc=document.getElementById('hc');
-  hc.innerHTML='';
-  var hdiv=document.createElement('div');
-  hdiv.style.cssText='background:#1F3864;color:#fff;border-radius:10px;padding:12px;margin-bottom:10px;text-align:center';
-  hdiv.innerHTML='<b>'+curso+' - '+mn+'</b><br><small>'+ncList.length+' clases registradas</small>';
-  hc.appendChild(hdiv);
-  if(!ncList.length){
-    var nd=document.createElement('div');
-    nd.style.cssText='text-align:center;padding:20px;color:#888';
-    nd.textContent='Sin clases registradas todavia.';
-    hc.appendChild(nd);
-    return;
-  }
-  alumnos.forEach(function(nombre,i){
-    var pres=0,nSum=0,nCount=0;
-    var rowDiv=document.createElement('div');
-    ncList.forEach(function(nc){
-      var clave=(s.reg['fecha_'+nc]||'?')+'_'+nc;
-      var est=s.reg['est_'+clave+'_'+i]||'--';
-      var nota=s.reg['nota_'+clave+'_'+i]||'';
-      var obs=s.reg['obs_'+clave+'_'+i]||'';
-      if(est==='P')pres++;
-      if(nota&&!isNaN(nota)){nSum+=parseFloat(nota);nCount++;}
-      var rw=document.createElement('div');
-      rw.className='cls-row';
-      var bc={P:'pct-ok',A:'pct-bad',T:'pct-warn'}[est]||'';
-      rw.innerHTML='<span style="flex:1;color:#555">Clase '+nc+' - '+(s.reg['fecha_'+nc]||'?')+'</span>'
-        +'<span class="al-pct '+bc+'" style="font-size:11px;padding:2px 7px">'+est+'</span>'
-        +(nota?'<span class="nota-b">'+nota+'</span>':'<span style="color:#ccc;font-size:10px">sin nota</span>');
-      rowDiv.appendChild(rw);
-      if(obs){
-        var od=document.createElement('div');
-        od.className='cls-obs';
-        od.textContent=obs;
-        rowDiv.appendChild(od);
-      }
-    });
-    var pct=Math.round(pres/ncList.length*100);
-    var prom=nCount>0?(nSum/nCount).toFixed(1):'--';
-    var pctCls=pct>=75?'pct-ok':pct>=50?'pct-warn':'pct-bad';
-    var promColor=prom!='--'?(parseFloat(prom)>=7?'#1B4F35':parseFloat(prom)>=4?'#B7860B':'#C0392B'):'#888';
-    var card=document.createElement('div');
-    card.className='al-card';
-    var top=document.createElement('div');
-    top.className='al-top';
-    top.innerHTML='<div class="al-name">'+(i+1)+'. '+nombre+'</div>'
-      +'<span class="al-pct '+pctCls+'">'+pct+'%</span>'
-      +'<span class="al-prom" style="color:'+promColor+'">Prom: '+prom+'</span>';
-    var det=document.createElement('div');
-    det.style.cssText='display:none;margin-top:8px;padding-top:8px;border-top:1px solid #eee';
-    det.appendChild(rowDiv);
-    top.onclick=function(){det.style.display=det.style.display==='none'?'block':'none';};
-    card.appendChild(top);
-    card.appendChild(det);
-    hc.appendChild(card);
-  });
-}
-
-function loadPlan(){
-  var curso=COURSES[selC], mat=MATERIAS[selC][selM];
-  var mn=mat==='PR'?'Preceptoria':(MNAMES[mat]||mat);
-  var alumnos=STUDENTS[selC];
-  var s=getLS(selC,selM);
-  var ncList=(s.reg['nc_list']||[]).slice().sort(function(a,b){return a-b;});
-  document.getElementById('plan-tit').textContent='Planilla - '+curso+' '+mn;
-  var tbody=document.getElementById('plan-body');
-  tbody.innerHTML='';
-  alumnos.forEach(function(nombre,i){
-    var pres=0,nSum=0,nCount=0;
-    ncList.forEach(function(nc){
-      var clave=(s.reg['fecha_'+nc]||'?')+'_'+nc;
-      var est=s.reg['est_'+clave+'_'+i]||'';
-      var nota=s.reg['nota_'+clave+'_'+i]||'';
-      if(est==='P')pres++;
-      if(nota&&!isNaN(parseFloat(nota))){nSum+=parseFloat(nota);nCount++;}
-    });
-    var pct=ncList.length>0?Math.round(pres/ncList.length*100):null;
-    var prom=nCount>0?(nSum/nCount).toFixed(1):null;
-    var n11=(s.nf&&s.nf['n11_'+i])||'';
-    var n21=(s.nf&&s.nf['n21_'+i])||'';
-    var pi1=(s.nf&&s.nf['pi1_'+i])||'';
-    var n12=(s.nf&&s.nf['n12_'+i])||'';
-    var n22=(s.nf&&s.nf['n22_'+i])||'';
-    var pi2=(s.nf&&s.nf['pi2_'+i])||'';
-    var promStr=prom!==null?prom:'--';
-    var promCls=prom!==null?(parseFloat(prom)>=7?'pok':parseFloat(prom)>=4?'pmed':'pmal'):'';
-    var pctStr=pct!==null?pct+'%':'--';
-    var pctCls=pct!==null?(pct>=75?'pok':pct>=50?'pmed':'pmal'):'';
-    var tr=document.createElement('tr');
-    var tdNombre=document.createElement('td');
-    tdNombre.textContent=(i+1)+'. '+nombre;
-    tr.appendChild(tdNombre);
-    function mkInput(key,val){
-      var td=document.createElement('td');
-      var inp=document.createElement('input');
-      inp.className='ni'; inp.type='number'; inp.min='1'; inp.max='10'; inp.step='0.5';
-      inp.value=val; inp.placeholder='--';
-      inp.setAttribute('data-key',key);
-      inp.onchange=function(){saveNF(this.getAttribute('data-key'),this.value);};
-      td.appendChild(inp);
-      return td;
-    }
-    function mkTd(txt,cls){
-      var td=document.createElement('td');
-      if(cls)td.className=cls;
-      td.textContent=txt;
-      return td;
-    }
-    tr.appendChild(mkInput('n11_'+i, n11));
-    tr.appendChild(mkInput('n21_'+i, n21));
-    tr.appendChild(mkInput('pi1_'+i, pi1));
-    tr.appendChild(mkTd(promStr, promCls));
-    tr.appendChild(mkTd(pctStr, pctCls));
-    tr.appendChild(mkInput('n12_'+i, n12));
-    tr.appendChild(mkInput('n22_'+i, n22));
-    tr.appendChild(mkInput('pi2_'+i, pi2));
-    tbody.appendChild(tr);
-  });
-}
-
-function saveNF(key,val){
-  var s=getLS(selC,selM);
-  if(!s.nf)s.nf={};
-  s.nf[key]=val;
-  saveLS(selC,selM,s);
-  loadPlan();
-}
-
-function tglDet(id){
-  var d=document.getElementById(id);
-  if(d) d.style.display=d.style.display==='block'?'none':'block';
+    var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'guardar',rows:rows})});
+    var j=await r.json();
+    toast(j.ok?'Lista guardada ('+rows.length+' registros)':'Error: '+(j.error||'?'),3000);
+  }catch(ex){toast('Sin conexión — revisar red');}
 }
 
 buildGrid();
