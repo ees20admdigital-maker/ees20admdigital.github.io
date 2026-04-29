@@ -97,10 +97,10 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 
 .ar-R{border-left-color:#B7860B!important;background:#FFFDE7}
 .ar-I{border-left-color:#1B7A3E!important;background:#F0FFF4}
-.tag-R{background:#FFF2CC;color:#7F6000;font-size:9px;font-weight:bold;padding:2px 6px;border-radius:10px;flex-shrink:0;display:inline-block;margin-left:4px}
-.tag-I{background:#D1FAE5;color:#065F46;font-size:9px;font-weight:bold;padding:2px 6px;border-radius:10px;flex-shrink:0;display:inline-block;margin-left:4px}
-.tray-info{width:100%;padding:2px 0 4px 34px;font-size:9px;color:#555}
-.b-bk{background:#EDE9FE!important;color:#5B21B6!important}
+.tag-R{background:#FFF2CC;color:#7F6000;font-size:9px;font-weight:bold;padding:2px 5px;border-radius:8px;margin-left:4px}
+.tag-I{background:#D1FAE5;color:#065F46;font-size:9px;font-weight:bold;padding:2px 5px;border-radius:8px;margin-left:4px}
+.tray-info{font-size:9px;color:#666;padding:0 0 3px 34px;width:100%}
+.b-bk{background:#EDE9FE!important;color:#5B21B6!important;border:none}
 .bk-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
 .bk-modal.show{display:flex}
 .bk-box{background:#fff;border-radius:12px;padding:20px;width:92%;max-width:420px;max-height:82vh;overflow-y:auto}
@@ -108,8 +108,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;font-size:15px}
 .bk-box pre{background:#f5f5f5;padding:10px;border-radius:8px;font-size:10px;white-space:pre-wrap;word-break:break-all;margin-bottom:12px;max-height:320px;overflow-y:auto}
 .bk-btns{display:flex;gap:8px}
 .bk-btns button{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer}
-.bk-copy{background:#1F3864;color:#fff}
-.bk-close{background:#f0f4f8;color:#333}
+.bk-copy{background:#1F3864;color:#fff}.bk-close{background:#f0f4f8;color:#333}
 </style>
 </head>
 <body>
@@ -252,7 +251,8 @@ function buildList(){
   var btnGD=document.createElement('button'); btnGD.className='b-gd'; btnGD.textContent='Guardar lista'; btnGD.onclick=guardar;
   var btnHS=document.createElement('button'); btnHS.className='b-hist'; btnHS.textContent='Ver historial'; btnHS.onclick=function(){showP('p-hist');loadHist();};
   var btnPL=document.createElement('button'); btnPL.className='b-plan'; btnPL.textContent='Planilla'; btnPL.onclick=function(){showP('p-plan');loadPlan();};
-  act.appendChild(btnTP); act.appendChild(btnGD); act.appendChild(btnHS); act.appendChild(btnPL);
+  var btnBK=document.createElement('button'); btnBK.className='b-bk'; btnBK.textContent='💾 Backup'; btnBK.onclick=abrirBackup;
+  act.appendChild(btnTP); act.appendChild(btnGD); act.appendChild(btnHS); act.appendChild(btnPL); act.appendChild(btnBK);
   
   lc.innerHTML='';
   lc.appendChild(hdr); lc.appendChild(fr1); lc.appendChild(fr2);
@@ -283,8 +283,29 @@ function buildList(){
     ni.style.cssText='border:2px solid #D1FAE5;border-radius:6px;padding:5px;font-size:14px;font-weight:bold;width:54px;text-align:center;color:#1B4F35;background:#F0FFF4;flex-shrink:0';
     ni.placeholder='--'; ni.title='Nota de la clase (1-10)';
     ni.oninput=(function(idx){return function(){actaM['nota_'+idx]=this.value;};})(i);
-    ar.appendChild(num); ar.appendChild(nm); ar.appendChild(abtn); ar.appendChild(bgrp); ar.appendChild(ni);
+    // Tags R/I
+    var _st=STUDENT_TYPES[selC]&&STUDENT_TYPES[selC][i];
+    var _tp=_st?_st.tipo:'C';
+    if(_tp==='R'||_tp==='RI'){
+      var _tag=document.createElement('span'); _tag.className='tag-R'; _tag.textContent='RECURSA';
+      ar.appendChild(num); ar.appendChild(nm); ar.appendChild(_tag); ar.appendChild(abtn); ar.appendChild(bgrp); ar.appendChild(ni);
+      ar.classList.add('ar-R');
+    } else if(_tp==='I'){
+      var _tag=document.createElement('span'); _tag.className='tag-I'; _tag.textContent='INTENS.';
+      ar.appendChild(num); ar.appendChild(nm); ar.appendChild(_tag); ar.appendChild(abtn); ar.appendChild(bgrp); ar.appendChild(ni);
+      ar.classList.add('ar-I');
+    } else {
+      ar.appendChild(num); ar.appendChild(nm); ar.appendChild(abtn); ar.appendChild(bgrp); ar.appendChild(ni);
+    }
     lc.appendChild(ar);
+    if(_st&&_st.tipo!=='C'){
+      var _info=(_tp==='R'||_tp==='RI')?_st.recursa:_st.intensifica;
+      if(_info&&_info.length){
+        var _ti=document.createElement('div'); _ti.className='tray-info';
+        _ti.textContent=(_tp==='R'||_tp==='RI'?'↩ ':'⚡ ')+_info.join(' | ');
+        lc.appendChild(_ti);
+      }
+    }
     
     var abox=document.createElement('div'); abox.className='acta-box'; abox.id='acta-box-'+i;
     var albl=document.createElement('label'); albl.textContent='Acta / Observacion libre';
@@ -511,44 +532,7 @@ function tglDet(id){
   if(d) d.style.display=d.style.display==='block'?'none':'block';
 }
 
-// ── NUEVO: STUDENT_TYPES + BACKUP + TAGS R/I ─────────────────
 var STUDENT_TYPES = _d.student_types || [];
-
-// Sobreescribir buildList para agregar tags R/I
-var _origBuildList = buildList;
-function buildList(){
-  _origBuildList();
-  // Agregar tags R/I a cada fila después de que se construyó la lista
-  var alumnos = STUDENTS[selC] || [];
-  alumnos.forEach(function(nombre, i){
-    var st = STUDENT_TYPES[selC] && STUDENT_TYPES[selC][i];
-    if(!st || st.tipo === 'C') return;
-    var ar = document.getElementById('ar'+i);
-    if(!ar) return;
-    ar.classList.add('ar-'+(st.tipo==='R'||st.tipo==='RI'?'R':'I'));
-    var nm = ar.querySelector('.aname');
-    if(nm){
-      var tag = document.createElement('span');
-      tag.className = st.tipo==='R'||st.tipo==='RI' ? 'tag-R' : 'tag-I';
-      tag.textContent = st.tipo==='R'||st.tipo==='RI' ? 'RECURSA' : 'INTENS.';
-      nm.parentNode.insertBefore(tag, nm.nextSibling);
-    }
-    var info = (st.tipo==='R'||st.tipo==='RI') ? st.recursa : st.intensifica;
-    if(info && info.length){
-      var ti = document.createElement('div');
-      ti.className = 'tray-info';
-      ti.textContent = (st.tipo==='R'||st.tipo==='RI' ? '↩ ' : '⚡ ') + info.join(' | ');
-      ar.parentNode.insertBefore(ti, ar.nextSibling);
-    }
-  });
-}
-
-// Agregar botón backup
-var _origBuildListForBk = buildList;
-(function(){
-  var _orig = window.buildList;
-  // No sobreescribir de nuevo - el botón se agrega via patch del act
-})();
 
 function abrirBackup(){
   var curso=COURSES[selC],mat=MATERIAS[selC][selM];
@@ -557,7 +541,7 @@ function abrirBackup(){
   var fecha=dfEl?dfEl.value:'',nclase=ncEl?ncEl.value:'';
   var alumnos=STUDENTS[selC];
   var lineas=['=== BACKUP LISTA ===','Curso: '+curso+' | Materia: '+mn,
-    'Fecha: '+(fecha?(function(s){var p=s.split('-');return p[2]+'/'+p[1]+'/'+p[0];})(fecha):'?')+' | Clase N°: '+nclase,''];
+    'Fecha: '+(fecha?fmtD(fecha):'?')+' | Clase N°: '+nclase,''];
   var pres=[],aus=[],tard=[],sinM=[];
   alumnos.forEach(function(nombre,i){
     var e=estados[i]||'';
@@ -583,38 +567,10 @@ function copiarBackup(){
 }
 function cerrarBackup(){document.getElementById('bk-modal').classList.remove('show');}
 
-// Patch: agregar botón backup cuando se construye el panel de acciones
-var _buildListPatch = buildList;
-buildList = function(){
-  _buildListPatch();
-  // Agregar botón backup si no existe
-  var existing = document.querySelector('.b-bk');
-  if(!existing){
-    var actBtns = document.querySelectorAll('#lc .act, #lc button');
-    // Buscar el contenedor de botones de acción
-    var actDiv = document.querySelector('#lc > div.act') || 
-                 (function(){
-                   var divs = document.querySelectorAll('#lc > div');
-                   for(var i=0;i<divs.length;i++){
-                     if(divs[i].querySelector('button')) return divs[i];
-                   }
-                   return null;
-                 })();
-    if(actDiv){
-      var btn = document.createElement('button');
-      btn.className = 'b-bk'; btn.textContent = '💾 Backup';
-      btn.onclick = abrirBackup;
-      actDiv.appendChild(btn);
-    }
-  }
-};
-
 buildGrid();
 </script>
-
 <div class="bk-modal" id="bk-modal">
-  <div class="bk-box">
-    <h3>💾 Backup de lista</h3>
+  <div class="bk-box"><h3>💾 Backup de lista</h3>
     <pre id="bk-content"></pre>
     <div class="bk-btns">
       <button class="bk-copy" onclick="copiarBackup()">📋 Copiar</button>
