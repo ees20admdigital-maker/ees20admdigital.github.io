@@ -341,7 +341,7 @@ async function guardar(){
   var nclase=parseInt(document.getElementById('nc').value)||1;
   var rows=[];
   alumnos.forEach(function(nombre,i){
-    if(estados[i]) rows.push({curso:curso,materia:mat,nombre:nombre,estado:estados[i],
+    if(estados[i]) rows.push({curso:curso,materia:mat,alumno:nombre,estado:estados[i],
       fecha:fecha,nclase:nclase,obs:'',acta:actaM[i]||''});
   });
   if(!rows.length){toast('Marca al menos un alumno');return;}
