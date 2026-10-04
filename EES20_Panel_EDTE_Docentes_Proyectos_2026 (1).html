@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EES N°20 — Panel EDTE, Docentes, Proyectos, AIC, Acuerdos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#f0f2f5;color:#222;font-size:14px}
+.topbar{background:#1F4E79;color:#fff;padding:10px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.topbar-title{font-size:1.05rem;font-weight:700}
+.topbar-sub{font-size:.72rem;opacity:.75;margin-top:2px}
+.tabs{background:#fff;border-bottom:2px solid #1F4E79;padding:0 10px;display:flex;flex-wrap:wrap;gap:1px;position:sticky;top:54px;z-index:99;box-shadow:0 2px 4px rgba(0,0,0,.08)}
+.tab{padding:9px 12px;border:none;background:none;cursor:pointer;font-size:.76rem;color:#555;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab:hover{color:#1F4E79;background:#f0f4ff}
+.tab.active{color:#1F4E79;font-weight:700;border-bottom-color:#1F4E79}
+.content{padding:14px;max-width:1400px;margin:0 auto}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.card{background:#fff;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.09)}
+.card-title{font-size:.95rem;font-weight:700;color:#1F4E79;margin-bottom:12px;border-bottom:2px solid #e8eef5;padding-bottom:7px}
+.badge{display:inline-block;padding:2px 7px;border-radius:11px;font-size:.68rem;font-weight:700}
+.bok{background:#e6f4ea;color:#375623}
+.bwarn{background:#fff3e0;color:#C55A11}
+.bdanger{background:#fdecea;color:#C00000}
+.bblue{background:#e8f0fe;color:#1F4E79}
+.bgray{background:#f0f0f0;color:#666}
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.tbl th{background:#1F4E79;color:#fff;padding:7px 9px;text-align:left}
+.tbl td{padding:6px 9px;border-bottom:1px solid #eee;vertical-align:top}
+.tbl tr:hover td{background:#f5f8ff}
+.tbl-wrap{max-height:500px;overflow-y:auto;border-radius:8px;border:1px solid #e0e7ef}
+.search-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.search-bar input,.search-bar select{padding:7px 10px;border:1px solid #d0d9e8;border-radius:7px;font-size:.82rem;background:#fff}
+.search-bar input{flex:1;min-width:180px}
+.chk-dia{display:flex;align-items:flex-start;gap:8px;padding:7px 4px;border-bottom:1px solid #f0f0f0}
+.chk-dia input{width:15px;height:15px;cursor:pointer;margin-top:2px;flex-shrink:0}
+.chk-label{font-size:.83rem;cursor:pointer;flex:1}
+.chk-label.done{text-decoration:line-through;color:#aaa}
+.secc{font-weight:700;font-size:.8rem;color:#1F4E79;padding:5px 10px;background:#EEF4FF;border-radius:5px;margin:10px 0 6px}
+.alert-v{background:#e6f4ea;border-left:5px solid #375623;padding:10px 14px;border-radius:7px;margin-bottom:8px}
+.obs-input{width:100%;padding:4px 8px;border:1px solid #d0d9e8;border-radius:5px;font-size:.75rem;font-family:inherit}
+.mc-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.mc{background:#fff;border-radius:10px;padding:12px 16px;text-align:center;flex:1;min-width:100px;box-shadow:0 1px 6px rgba(0,0,0,.09)}
+.mc-num{font-size:1.6rem;font-weight:800;color:#1F4E79}
+.mc-num.warn{color:#C55A11}
+.mc-num.danger{color:#C00000}
+.mc-label{font-size:.68rem;color:#888;margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.item-card{background:#fff;border-radius:8px;padding:10px 14px;margin-bottom:6px;border-left:4px solid #ccc;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.item-card.done{border-left-color:#375623}
+.item-card.done .item-texto{text-decoration:line-through;color:#aaa}
+.item-actor{font-size:.7rem;font-weight:700;background:#EEF4FF;color:#1F4E79;padding:2px 7px;border-radius:8px;margin-right:6px;display:inline-block;margin-bottom:3px}
+.item-texto{font-size:.82rem}
+.btn-toggle{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:700;white-space:nowrap;background:#fdecea;color:#C00000}
+.btn-toggle.done{background:#375623;color:#fff}
+.mes-header{background:#1F4E79;color:#fff;padding:8px 14px;border-radius:8px;font-weight:700;font-size:.85rem;margin-bottom:6px;margin-top:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🏫 EES N°20 — EDTE, Docentes, Proyectos, Acuerdos de Supervisión</div>
+  <div class="topbar-sub" id="fecha-p3">Claypole, Almirante Brown · 2026</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('porcurso')">🎓 Por Curso</button>
+  <button class="tab" onclick="showTab('docentes')">📚 Docentes</button>
+  <button class="tab" onclick="showTab('proyectos')">🔗 Proyectos</button>
+  <button class="tab" onclick="showTab('aic')">🤝 AIC</button>
+  <button class="tab" onclick="showTab('intensif')">📊 Intensificación</button>
+  <button class="tab" onclick="showTab('ac2')">🎓 Acuerdo 2</button>
+  <button class="tab" onclick="showTab('ac3')">📅 Acuerdo 3</button>
+  <button class="tab" onclick="showTab('ac4')">🏫 Acuerdo 4</button>
+  <button class="tab" onclick="showTab('ac6')">🗳️ Acuerdo 6</button>
+  <button class="tab" onclick="showTab('ac7')">🤝 Acuerdo 7</button>
+  <button class="tab" onclick="showTab('ac8')">📈 Acuerdo 8</button>
+</div>
+
+<div class="content">
+
+<div id="tab-porcurso" class="tab-pane active">
+  <div class="search-bar">
+    <select id="sel-curso">
+      <option value="">Seleccionar curso...</option>
+      <option>1°1°</option><option>1°2°</option><option>1°3°</option><option>1°4°</option>
+      <option>2°1°</option><option>2°2°</option><option>2°3°</option><option>2°4°</option>
+      <option>3°1°</option><option>3°2°</option><option>3°4°</option><option>3°5°</option>
+      <option>4°1°</option><option>4°2°</option><option>4°3°</option><option>4°4°</option>
+      <option>5°1°</option><option>5°2°</option><option>5°3°</option><option>5°4°</option>
+      <option>6°1°</option><option>6°2°</option><option>6°3°</option><option>6°4°</option>
+    </select>
+    <button id="btn-cargar-asist" style="padding:7px 14px;background:#1F4E79;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.82rem">↻ Cargar asistencia de hoy</button>
+    <span id="status-asist" style="font-size:.78rem;color:#888;align-self:center"></span>
+  </div>
+  <div id="detalle-curso"><div class="card"><p style="color:#aaa;text-align:center;padding:20px">Seleccioná un curso arriba</p></div></div>
+</div>
+
+<div id="tab-docentes" class="tab-pane">
+  <div class="grid2">
+    <div class="card"><div class="card-title">📋 Supervisión Abril 2026</div><div id="chk-abril"></div></div>
+    <div class="card"><div class="card-title">📋 Supervisión Agosto 2026</div><div id="chk-agosto"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🏫 Visitas áulicas 2026</div>
+    <table class="tbl"><thead><tr><th>Visita</th><th>Docente</th><th>Curso</th><th>Período</th><th>Obs.</th></tr></thead>
+    <tbody id="tbody-visitas"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 Seguimiento asistencia docente</div>
+    <textarea id="obs-doc" placeholder="Registrar docentes con ausentismo, cargos sin cubrir..." style="width:100%;min-height:80px;padding:8px;border:1px solid #d0d9e8;border-radius:7px;font-size:.82rem;font-family:inherit;resize:vertical"></textarea>
+    <button id="btn-save-doc" style="margin-top:8px;padding:5px 14px;background:#1F4E79;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.78rem">💾 Guardar</button>
+  </div>
+</div>
+
+<div id="tab-proyectos" class="tab-pane">
+  <div class="card"><div class="card-title">🔗 Proyectos Institucionales 2026</div>
+  <table class="tbl"><thead><tr><th></th><th>Proyecto</th><th>Año</th><th>Estado</th><th>Observaciones</th></tr></thead>
+  <tbody id="tbody-proy"></tbody></table></div>
+</div>
+
+<div id="tab-aic" class="tab-pane">
+  <div class="card">
+    <div class="card-title">🤝 AIC — Acuerdo Institucional de Convivencia 2026</div>
+    <div class="alert-v" style="margin-bottom:12px">Estado: <strong>VIGENTE</strong></div>
+    <div id="chk-aic"></div>
+    <div style="margin-top:12px">
+      <div class="secc">Observaciones generales AIC</div>
+      <textarea id="obs-aic" placeholder="Novedades, actualizaciones..." style="width:100%;min-height:60px;padding:8px;border:1px solid #d0d9e8;border-radius:7px;font-size:.82rem;font-family:inherit;resize:vertical"></textarea>
+      <button id="btn-save-aic" style="margin-top:6px;padding:5px 14px;background:#1F4E79;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.78rem">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="tab-intensif" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>📊 Intensificación 2C — Julio a Diciembre 2026</strong></div>
+  <div id="div-intensif"></div>
+</div>
+<div id="tab-ac2" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>🎓 Acuerdo N°2 — Articulación con Estudios Superiores</strong></div>
+  <div id="div-ac2"></div>
+</div>
+<div id="tab-ac3" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>📅 Acuerdo N°3 — Asistencia de Baja Intensidad (10/20/28)</strong></div>
+  <div id="div-ac3"></div>
+</div>
+<div id="tab-ac4" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>🏫 Acuerdo N°4 — Articulación con Nivel Primario (EP N°66)</strong></div>
+  <div id="div-ac4"></div>
+</div>
+<div id="tab-ac6" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>🗳️ Acuerdo N°6 — Participación Estudiantil y Centro de Estudiantes</strong></div>
+  <div id="div-ac6"></div>
+</div>
+<div id="tab-ac7" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>🤝 Acuerdo N°7 — Convivencia y Políticas de Cuidado</strong></div>
+  <div id="div-ac7"></div>
+</div>
+<div id="tab-ac8" class="tab-pane">
+  <div style="background:#fff3e0;border-left:5px solid #C55A11;padding:10px 14px;border-radius:7px;margin-bottom:14px"><strong>📈 Acuerdo N°8 — Fortalecimiento de Trayectorias (EDTE/CITE/REEB)</strong></div>
+  <div id="div-ac8"></div>
+</div>
+
+</div>
+
+<script>
+// ═══ DATOS ═══
+var SUMMARY = [{"nombre":"BOLMO, MAIA","curso":"2°1°","año":2,"carga":12,"intensifica":["MTM(1°)→MTM 1°1°","CNT(1°)→BLG 2°1°","CSC(1°)→GGF 2°1°","ART(1°)→ART 2°1°"],"recursa":["IGS(1°) en 1°3°","CDC(1°) en 1°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"ESPÍNDOLA, BAYRON S.","curso":"2°1°","año":2,"carga":10,"intensifica":["CSC(1°)→GGF 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FIGUEROA, TORRES ANGEL","curso":"2°1°","año":2,"carga":10,"intensifica":["MTM(1°)→MTM 1°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FLORES, ALEJO AGUSTIN","curso":"2°1°","año":2,"carga":10,"intensifica":["MTM(1°)→MTM 1°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GOMEZ, ALMA ANGELINA","curso":"2°1°","año":2,"carga":10,"intensifica":["PLG(1°)→PLG 2°1°","CNT(1°)→BLG 2°1°","CSC(1°)→GGF 2°1°","ART(1°)→ART 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GOMEZ, VALENTINO JONAS","curso":"2°1°","año":2,"carga":10,"intensifica":["CNT(1°)→BLG 2°1°","CSC(1°)→GGF 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MORALES MEDINA, LIONEL","curso":"2°1°","año":2,"carga":11,"intensifica":["MTM(1°)→MTM 1°1°","CNT(1°)→BLG 2°1°","CSC(1°)→GGF 2°1°","ART(1°)→ART 2°1°"],"recursa":["IGS(1°) en 1°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"POLITI, THIAGO PETER","curso":"2°1°","año":2,"carga":10,"intensifica":["MTM(1°)→MTM 1°1°","CNT(1°)→BLG 2°1°","CSC(1°)→GGF 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RUBIO, ISMAEL JOAQUIN","curso":"2°1°","año":2,"carga":10,"intensifica":["CSC(1°)→GGF 2°1°","ART(1°)→ART 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BLASI, IAN","curso":"2°1°","año":2,"carga":10,"intensifica":["MTM(1°)→MTM 1°1°","PLG(1°)→PLG 2°1°","ART(1°)→ART 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALMEIDA, ALEJANDRO","curso":"2°2°","año":2,"carga":12,"intensifica":["PLG(1°)→PLG 2°2°","CSC(1°)→GGF 2°2°","CNT(1°)→BLG 2°2°","ART(1°)→ART 2°2°"],"recursa":["CCD(1°) en SIN CURSO","IGS(1°) en 1°3°"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"BARRETO, SOFIA","curso":"2°2°","año":2,"carga":10,"intensifica":["IGS(1°)→IGS 2°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FIGUEROA, THIAGO E.","curso":"2°2°","año":2,"carga":10,"intensifica":["ART(1°)→ART 2°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VIZGARRA, MARCOS N.","curso":"2°2°","año":2,"carga":12,"intensifica":["MTM(1°)→MTM 1°1°","PLG(1°)→PLG 2°2°","CSC(1°)→GGF 2°2°","CNT(1°)→BLG 2°2°"],"recursa":["CCD(1°) en SIN CURSO","ART(1°) en 1°3°","IGS(1°) en 1°3°"],"no_cursa":["EFI"],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"AMARILLO, MATEO","curso":"2°3°","año":2,"carga":11,"intensifica":[],"recursa":["CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"BARRETO, ZOE","curso":"2°3°","año":2,"carga":11,"intensifica":[],"recursa":["CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"COSTILLA, ZAMIRA","curso":"2°3°","año":2,"carga":12,"intensifica":["CSC(1°)→GGF 2°3°","EFI(1°)→EFI 2°3°"],"recursa":["MCS(1°) en SIN CURSO","AMC(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":["EFI"],"conflictos":["SIN HORARIO: MCS(1°)","SIN HORARIO: AMC(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"GAUNA, MAIA","curso":"2°3°","año":2,"carga":12,"intensifica":["CNT(1°)→BLG 2°3°","EFI(1°)→EFI 2°3°"],"recursa":["AMC(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: AMC(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"ROMERO, JAIME","curso":"2°3°","año":2,"carga":11,"intensifica":["CSC(1°)→GGF 2°3°","CNT(1°)→BLG 2°3°","EFI(1°)→EFI 2°3°"],"recursa":["CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"MONTE, CATRIEL","curso":"2°3°","año":2,"carga":12,"intensifica":["CSC(1°)→GGF 2°3°","CNT(1°)→BLG 2°3°","EFI(1°)→EFI 2°3°"],"recursa":["AMC(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: AMC(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"OLIVERA, THIAGO","curso":"2°3°","año":2,"carga":12,"intensifica":["PLG(1°)→PLG 2°3°","CSC(1°)→GGF 2°3°","CNT(1°)→BLG 2°3°","IGS(1°)→IGS 2°3°"],"recursa":["MCS(1°) en SIN CURSO","AMC(1°) en SIN CURSO","CCD(1°) en SIN CURSO","EFI(1°) en 1°3°"],"no_cursa":["EFI","CDC"],"conflictos":["SIN HORARIO: MCS(1°)","SIN HORARIO: AMC(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"RAMIREZ, LEONARDO","curso":"2°3°","año":2,"carga":11,"intensifica":["EFI(1°)→EFI 2°3°"],"recursa":["CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"ROJAS, CIRO","curso":"2°3°","año":2,"carga":11,"intensifica":["EFI(1°)→EFI 2°3°"],"recursa":["CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: CCD(1°)"]},{"nombre":"VELIZ, ZAMIRA","curso":"2°3°","año":2,"carga":12,"intensifica":["CSC(1°)→GGF 2°3°"],"recursa":["AMC(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: AMC(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"ALTAMIRANO, URIEL DAMIAN","curso":"2°4°","año":2,"carga":11,"intensifica":["CNT(1°)→BLG 2°4°"],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"AMARILLO, TIZIANO DAMIAN","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"ARRIETA, TOBIAS","curso":"2°4°","año":2,"carga":10,"intensifica":["PLG(1°)→PLG 2°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BAU DORIANT, URIEL","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"ENRIQUE, ORIANA MILAGROS","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"LOPEZ, AINARA ISABEL","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"LOPEZ, SOPHIA MARTINA","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"MONZON ACOSTA, CIRO B.","curso":"2°4°","año":2,"carga":10,"intensifica":["CNT(1°)→BLG 2°4°","ART(1°)→ART 2°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"PELOZO, DAMIAN ISMAEL","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"PONOMO, XIOMARA A.","curso":"2°4°","año":2,"carga":11,"intensifica":["CNT(1°)→BLG 2°4°"],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"ROJAS, BENJAMIN","curso":"2°4°","año":2,"carga":11,"intensifica":[],"recursa":["MCS(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)"]},{"nombre":"VILLALBA, ANGELA","curso":"2°4°","año":2,"carga":12,"intensifica":["CSC(1°)→GGF 2°4°","IGS(1°)→IGS 2°4°","EFI(1°)→EFI 2°4°"],"recursa":["MCS(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"VIVAS, ONA","curso":"2°4°","año":2,"carga":12,"intensifica":["PLG(1°)→PLG 2°4°","CNT(1°)→BLG 2°4°","EFI(1°)→EFI 2°4°"],"recursa":["MCS(1°) en SIN CURSO","CCD(1°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(1°)","SIN HORARIO: CCD(1°)"]},{"nombre":"ALEGRE PEREZ, RAMIRO","curso":"3°1°","año":3,"carga":11,"intensifica":["MTM(2°)→MTM 2°1°","FQA(2°)→FQA 2°1°","GGF(2°)→GGF 3°1°","IGS(2°)→IGS 3°1°"],"recursa":["CDC(2°) en 2°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"CALLEJAS, ALAN VALENTIN","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°","BLG(2°)→BLG 3°1°","GGF(2°)→GGF 3°1°","CDC(2°)→CDC 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CANTERO,THIAGO","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CASTRO, LUCAS B.","curso":"3°1°","año":3,"carga":11,"intensifica":["MTM(2°)→MTM 2°1°","BLG(2°)→BLG 3°1°","ART(2°)→ART 3°1°","GGF(2°)→GGF 3°1°"],"recursa":["CDC(2°) en 2°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"CUENCAS CIPRES, RAMIRO","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESCOBAR, AARON","curso":"3°1°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FARIAS, MIA VALENTINA","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GARCIA, TIZIANA","curso":"3°1°","año":3,"carga":10,"intensifica":["PLG(2°)→PLG 3°1°","BLG(2°)→BLG 3°1°","CDC(2°)→CDC 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GONZALEZ, BRUNO","curso":"3°1°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GUTIERRREZ, JULIETA","curso":"3°1°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°1°","PLG(2°)→PLG 3°1°","BLG(2°)→BLG 3°1°","ART(2°)→ART 3°1°"],"recursa":["GGF(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°","EFI(2°) en 2°2°"],"no_cursa":["EFI","CDC"],"conflictos":[]},{"nombre":"MARTINEZ, LUCAS","curso":"3°1°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MEDINA RODAS, EMMA","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°","GGF(2°)→GGF 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ORDENES, MAURICIO","curso":"3°1°","año":3,"carga":10,"intensifica":["MTM(2°)→MTM 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"3°1°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°1°","BLG(2°)→BLG 3°1°","ART(2°)→ART 3°1°","FQA(2°)→FQA 2°1°"],"recursa":["GGF(2°) en 2°3°","HTR(2°) en 2°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"TAMOLA, RAMIRO","curso":"3°1°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°1°","BLG(2°)→BLG 3°1°","ART(2°)→ART 3°1°","FQA(2°)→FQA 2°1°"],"recursa":["GGF(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"ERASO, TEO","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","GGF(2°)→GGF 3°2°","HTR(2°)→HTR 3°2°"],"recursa":["MCS(2°) en SIN CURSO","IGS(2°) en 2°4°","CDC(2°) en 2°2°"],"no_cursa":["EFI"],"conflictos":["SIN HORARIO: MCS(2°)"]},{"nombre":"GHITARRONI, TIZIANO","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","FQA(2°)→FQA 2°1°"],"recursa":["MCS(2°) en SIN CURSO","GGF(2°) en 2°3°","HTR(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°"],"no_cursa":["EFI","CDC","HTR"],"conflictos":["SIN HORARIO: MCS(2°)","CONFLICTO: IGS(2°) en 2°3°"]},{"nombre":"GODOY, RAMIRO","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","FQA(2°)→FQA 2°1°"],"recursa":["MCS(2°) en SIN CURSO","GGF(2°) en 2°3°","HTR(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°","EFI(2°) en 2°2°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":["SIN HORARIO: MCS(2°)","CONFLICTO: IGS(2°) en 2°3°"]},{"nombre":"MOLINA, MAIA NEREA","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","FQA(2°)→FQA 2°1°"],"recursa":["MCS(2°) en SIN CURSO","GGF(2°) en 2°3°","HTR(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°","EFI(2°) en 2°2°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":["SIN HORARIO: MCS(2°)","CONFLICTO: IGS(2°) en 2°3°"]},{"nombre":"PONCE, MORENA","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","FQA(2°)→FQA 2°1°"],"recursa":["MCS(2°) en SIN CURSO","GGF(2°) en 2°3°","HTR(2°) en 2°3°","CDC(2°) en 2°2°","EFI(2°) en 2°2°"],"no_cursa":["EFI","CDC","HTR"],"conflictos":["SIN HORARIO: MCS(2°)"]},{"nombre":"PRIETO, NICOLAS","curso":"3°2°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°2°","IGS(2°)→IGS 3°2°","CDC(2°)→CDC 3°2°","EFI(1°)→EFI 3°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RODRIGUEZ, ISAIAS","curso":"3°2°","año":3,"carga":10,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","CDC(2°)→CDC 3°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","MTM(1°)→MTM 1°1°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°"],"recursa":["FQA(2°) en 2°3°","GGF(2°) en 2°3°","HTR(2°) en 2°3°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"SILVA, ANGEL GABRIEL","curso":"3°2°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"TROYANO, LUCIANO","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","FQA(2°)→FQA 2°1°"],"recursa":["GGF(2°) en 2°3°","HTR(2°) en 2°3°","IGS(2°) en 2°3°","CDC(2°) en 2°2°","EFI(2°) en 2°2°"],"no_cursa":["EFI","CDC","HTR"],"conflictos":["CONFLICTO: IGS(2°) en 2°3°"]},{"nombre":"RODRIGUEZ, XIOMARA","curso":"3°2°","año":3,"carga":11,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","IGS(2°)→IGS 3°2°"],"recursa":["MCS(2°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(2°)"]},{"nombre":"DIAZ, JULIETA LUDMILA","curso":"3°2°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°2°","BLG(2°)→BLG 3°2°","IGS(2°)→IGS 3°2°","CDC(2°)→CDC 3°2°"],"recursa":["MCS(2°) en SIN CURSO","EFI(2°) en 2°2°"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(2°)"]},{"nombre":"VILLAREAL, ALMA","curso":"3°2°","año":3,"carga":11,"intensifica":["MTM(1°)→MTM 1°1°","BLG(2°)→BLG 3°2°","ART(2°)→ART 3°2°","GGF(2°)→GGF 3°2°"],"recursa":["MCS(2°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: MCS(2°)"]},{"nombre":"AGUIRRE, BENJAMIN","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°4°","BLG(2°)→BLG 3°4°","ART(2°)→ART 3°4°"],"recursa":["FQA(2°) en 2°2°","GGF(2°) en 2°1°","HTR(2°) en 2°2°","IGS(2°) en 2°1°","CDC(2°) en 2°3°","EFI(2°) en 2°3°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":[]},{"nombre":"BARRETO ACUÑA, LUNA","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°4°","MTM(1°)→MTM 1°3°","BLG(2°)→BLG 3°4°"],"recursa":["ART(2°) en 2°1°","FQA(2°) en 2°2°","GGF(2°) en 2°1°","HTR(2°) en 2°1°","IGS(2°) en 2°1°","ART(1°) en 1°2°","CDC(2°) en 2°3°","EFI(2°) en 2°1°","EFI(1°) en 1°1°","CDC(1°) en 1°1°"],"no_cursa":["EFI","CDC","HTR","IGS","FQA","GGF","ART","BLG"],"conflictos":["CONFLICTO: HTR(2°) en 2°1°","CONFLICTO: EFI(2°) en 2°1°","CONFLICTO: EFI(1°) en 1°1°","CONFLICTO: CDC(1°) en 1°1°"]},{"nombre":"CARRACEDO, LUZ","curso":"3°4°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°4°","FQA(2°)→FQA 2°3°","IGS(2°)→IGS 3°4°","CDC(2°)→CDC 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CARRAZCO, ANTONELLA","curso":"3°4°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°4°","FQA(2°)→FQA 2°3°","CDC(2°)→CDC 3°4°","EFI(2°)→EFI 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESPINOZA IBAÑEZ, ZOE","curso":"3°4°","año":3,"carga":10,"intensifica":["CDC(2°)→CDC 3°4°","EFI(2°)→EFI 3°4°","EFI(1°)→EFI 3°4°","CDC(1°)→CDC 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"LOPEZ, BENJAMIN","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","BLG(2°)→BLG 3°4°","ART(2°)→ART 3°4°","FQA(2°)→FQA 2°3°"],"recursa":["GGF(2°) en 2°1°","HTR(2°) en 2°2°","IGS(2°) en 2°1°","CDC(2°) en 2°3°","EFI(2°) en 2°3°","CDC(1°) en 1°1°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":["CONFLICTO: CDC(1°) en 1°1°"]},{"nombre":"LUGO, NICOL","curso":"3°4°","año":3,"carga":10,"intensifica":["GGF(2°)→GGF 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MAMBRIN, ALMA","curso":"3°4°","año":3,"carga":10,"intensifica":["CDC(1°)→CDC 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MANSILLA, AARON","curso":"3°4°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MARTINEZ, JOAQUIN","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°4°","MTM(1°)→MTM 1°3°","BLG(2°)→BLG 3°4°"],"recursa":["ART(2°) en 2°1°","FQA(2°) en 2°2°","GGF(2°) en 2°1°","HTR(2°) en 2°1°","IGS(2°) en 2°1°","CDC(2°) en 2°3°","EFI(1°) en 1°1°","CDC(1°) en 1°4°"],"no_cursa":["EFI","CDC","HTR","IGS","FQA","GGF"],"conflictos":["CONFLICTO: HTR(2°) en 2°1°","CONFLICTO: EFI(1°) en 1°1°"]},{"nombre":"SANTILLAN, AMBAR","curso":"3°4°","año":3,"carga":10,"intensifica":["CDC(2°)→CDC 3°4°","EFI(2°)→EFI 3°4°","CDC(1°)→CDC 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VALDEZ ROMERO,BRIAN","curso":"3°4°","año":3,"carga":10,"intensifica":["PLG(2°)→PLG 3°4°","BLG(2°)→BLG 3°4°","CDC(2°)→CDC 3°4°","EFI(1°)→EFI 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"3°4°","año":3,"carga":12,"intensifica":["PLG(2°)→PLG 3°4°","BLG(2°)→BLG 3°4°","ART(2°)→ART 3°4°","FQA(2°)→FQA 2°3°"],"recursa":["GGF(2°) en 2°1°","HTR(2°) en 2°2°","EFI(1°) en 1°4°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"VELAZQUE, THIAGO","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°4°","BLG(2°)→BLG 3°4°","FQA(2°)→FQA 2°3°"],"recursa":["GGF(2°) en 2°1°","HTR(2°) en 2°2°","ART(1°) en 1°2°","CDC(2°) en 2°3°","EFI(2°) en 2°1°","CDC(1°) en 1°1°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":["CONFLICTO: EFI(2°) en 2°1°","CONFLICTO: CDC(1°) en 1°1°"]},{"nombre":"TAMOLA, RAMIRO","curso":"3°4°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°4°","BLG(2°)→BLG 3°4°","ART(2°)→ART 3°4°"],"recursa":["FQA(2°) en 2°2°","GGF(2°) en 2°1°","HTR(2°) en 2°2°","IGS(2°) en 2°1°","CDC(2°) en 2°3°","EFI(2°) en 2°3°"],"no_cursa":["EFI","CDC","HTR","IGS"],"conflictos":[]},{"nombre":"GOMEZ, TIZIANO","curso":"3°5°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°5°","BLG(2°)→BLG 3°5°","ART(2°)→ART 3°5°"],"recursa":["FQA(2°) en 2°1°","GGF(2°) en 2°1°","CDC(2°) en 2°4°","EFI(2°) en 2°1°","CDC(1°) en 1°1°"],"no_cursa":["EFI","CDC","HTR"],"conflictos":["CONFLICTO: EFI(2°) en 2°1°","CONFLICTO: CDC(1°) en 1°1°"]},{"nombre":"MOLINA, CANDELA","curso":"3°5°","año":3,"carga":11,"intensifica":["BLG(2°)→BLG 3°5°","ART(2°)→ART 3°5°","FQA(2°)→FQA 2°3°","GGF(2°)→GGF 3°5°"],"recursa":["EFI(2°) en 2°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"MONZON, RAMIRO","curso":"3°5°","año":3,"carga":10,"intensifica":["EFI(2°)→EFI 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"NUÑEZ, SANTINO","curso":"3°5°","año":3,"carga":10,"intensifica":["BLG(2°)→BLG 3°5°","GGF(2°)→GGF 3°5°","ART(1°)→ART 3°5°","EFI(2°)→EFI 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"OLIBERA, LUDMILA","curso":"3°5°","año":3,"carga":10,"intensifica":["ART(2°)→ART 3°5°","GGF(2°)→GGF 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROBLES, SHEILA","curso":"3°5°","año":3,"carga":10,"intensifica":["GGF(2°)→GGF 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROJAS, SANTINO","curso":"3°5°","año":3,"carga":10,"intensifica":["FQA(2°)→FQA 2°3°","GGF(2°)→GGF 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROMERO, LAUTARO","curso":"3°5°","año":3,"carga":10,"intensifica":["PLG(1°)→PLG 3°5°","ART(2°)→ART 3°5°","FQA(2°)→FQA 2°3°","GGF(2°)→GGF 3°5°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VALLEJOS, ORIANA","curso":"3°5°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°5°","PLG(1°)→PLG 3°5°","MTM(1°)→MTM 1°3°"],"recursa":["BLG(2°) en 2°1°","ART(2°) en 2°1°","FQA(2°) en 2°1°","GGF(2°) en 2°1°","HTR(2°) en 2°1°","CDC(2°) en 2°4°","EFI(2°) en 2°1°"],"no_cursa":["EFI","CDC","HTR","IGS","FQA"],"conflictos":["CONFLICTO: HTR(2°) en 2°1°","CONFLICTO: EFI(2°) en 2°1°"]},{"nombre":"VILLALBA, ANGELA","curso":"3°5°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(2°)→PLG 3°5°","BLG(2°)→BLG 3°5°","ART(2°)→ART 3°5°"],"recursa":["FQA(2°) en 2°1°","GGF(2°) en 2°1°","HTR(2°) en 2°2°","EFI(2°) en 2°3°","CDC(1°) en 1°1°"],"no_cursa":["EFI","CDC","HTR"],"conflictos":["CONFLICTO: CDC(1°) en 1°1°"]},{"nombre":"DE VICENZI MARTIN","curso":"3°5°","año":3,"carga":12,"intensifica":["MTM(2°)→MTM 2°3°","PLG(1°)→PLG 3°5°","MTM(1°)→MTM 1°3°","BLG(2°)→BLG 3°5°"],"recursa":["GGF(2°) en 2°1°","HTR(2°) en 2°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"AGUERO, URIEL","curso":"4°1°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°1°","PLG(3°)→LIT 4°1°","BLG(3°)→BLG 4°1°","ART(3°)→ART 3°1°"],"recursa":["FQA(3°) en 3°4°","GGF(3°) en 3°5°","HTR(3°) en 3°4°","IGS(3°) en 3°4°","HTR(2°) en 2°3°","CDC(3°) en 3°2°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":["CONFLICTO: IGS(3°) en 3°4°"]},{"nombre":"AYALA,AZUL VALENTINA","curso":"4°1°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CASTAÑARES, BIANCA A.","curso":"4°1°","año":4,"carga":11,"intensifica":["ART(2°)→ART 2°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FLORES, RAMIRO","curso":"4°1°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°1°","MTM(2°)→MCS 4°1°","BLG(3°)→BLG 4°1°","HTR(3°)→HTR 4°1°"],"recursa":["FQA(2°) en 2°3°","CDC(3°) en 3°1°","EFI(3°) en 3°4°"],"no_cursa":["EFI","HTR"],"conflictos":["CONFLICTO: EFI(3°) en 3°4°"]},{"nombre":"FRANCO MOREYRA, KEILA","curso":"4°1°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°1°","ART(3°)→ART 3°1°","HTR(3°)→HTR 4°1°","BLG(2°)→BLG 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GOMEZ, ZOE","curso":"4°1°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°1°","FQA(3°)→IAF 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"LEIVA GARCIA, NAIARA","curso":"4°1°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°1°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°1°","HTR(3°)→HTR 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"POLITI, RENATA","curso":"4°1°","año":4,"carga":11,"intensifica":["ART(3°)→ART 3°1°","FQA(3°)→IAF 4°1°","HTR(3°)→HTR 4°1°","CDC(3°)→CDC 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RODRIGUEZ, JONATHAN","curso":"4°1°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°1°","BLG(3°)→BLG 4°1°","FQA(3°)→IAF 4°1°","HTR(3°)→HTR 4°1°"],"recursa":["ART(2°) en 2°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"ROJAZ, MILENA","curso":"4°1°","año":4,"carga":11,"intensifica":["PLG(3°)→LIT 4°1°","HTR(3°)→HTR 4°1°","CDC(3°)→CDC 3°1°","EFI(3°)→EFI 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"4°1°","año":4,"carga":12,"intensifica":["PLG(3°)→LIT 4°1°","BLG(3°)→BLG 4°1°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°1°"],"recursa":["GGF(3°) en 3°5°","HTR(3°) en 3°4°","HTR(2°) en 2°3°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"RUBIN, MICAELA","curso":"4°1°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°1°","PLG(3°)→LIT 4°1°","BLG(3°)→BLG 4°1°","HTR(3°)→HTR 4°1°"],"recursa":["CDC(3°) en 3°1°","EFI(3°) en 3°4°"],"no_cursa":["EFI"],"conflictos":["CONFLICTO: EFI(3°) en 3°4°"]},{"nombre":"SUAREZ, ZAIRA","curso":"4°1°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°1°","ART(2°)→ART 2°1°","IGS(2°)→IGS 4°1°","CDC(3°)→CDC 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"TELLO, MAIA","curso":"4°1°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°1°","MTM(2°)→MCS 4°1°","HTR(3°)→HTR 4°1°","BLG(2°)→BLG 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"COLOMBO, LUCIANO","curso":"4°1°","año":4,"carga":11,"intensifica":["EFI(3°)→EFI 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALBORNOZ, BENJAMIN","curso":"4°2°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°2°","MTM(2°)→MCS 4°2°","FQA(3°)→IAF 4°2°","GGF(3°)→GGF 4°2°"],"recursa":["HTR(3°) en 3°1°"],"no_cursa":[],"conflictos":[]},{"nombre":"BOLAÑO, KEVIN","curso":"4°2°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°2°","PLG(3°)→LIT 4°2°","BLG(3°)→BLG 4°2°","GGF(3°)→GGF 4°2°"],"recursa":["HTR(3°) en 3°1°","ART(2°) en 2°1°","CDC(3°) en 3°4°","EFI(3°) en 3°5°","CDC(1°) en 1°3°"],"no_cursa":["EFI","HTR","IAF","IAQ"],"conflictos":[]},{"nombre":"CASERES, EITAN","curso":"4°2°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°2°","PLG(3°)→LIT 4°2°","CSC(1°)→GGF 4°2°","BLG(3°)→BLG 4°2°"],"recursa":["FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°1°","HTR(2°) en 2°1°","CDC(3°) en 3°1°","EFI(3°) en 3°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":["CONFLICTO: CDC(3°) en 3°1°","CONFLICTO: EFI(3°) en 3°1°"]},{"nombre":"CORBALAN, NEHEMIAS","curso":"4°2°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°2°","EFI(3°)→EFI 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ENRIQUE, SALOME","curso":"4°2°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°2°","HTR(3°)→HTR 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GONZALEZ, NICANOR","curso":"4°2°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°2°","PLG(3°)→LIT 4°2°","PLG(2°)→LIT 4°2°","BLG(3°)→BLG 4°2°"],"recursa":["GGF(3°) en 3°1°","IGS(3°) en 3°1°","HTR(2°) en 2°1°","CDC(3°) en 3°1°","EFI(3°) en 3°4°","CDC(2°) en 2°3°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":["CONFLICTO: CDC(3°) en 3°1°"]},{"nombre":"LA CONCEPCION, BAUTISTA","curso":"4°2°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°2°","HTR(3°)→HTR 4°2°","CDC(3°)→CDC 3°4°","EFI(3°)→EFI 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MASCAREÑO, BRISA","curso":"4°2°","año":4,"carga":11,"intensifica":["MCS(3°)→MCS 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MAYA AQUILES, E.","curso":"4°2°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MORALES, BRUNO","curso":"4°2°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°2°","EFI(3°)→EFI 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"OLIVERA, MIA","curso":"4°2°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°2°","HTR(3°)→HTR 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"PANIAGUA, ANGEL","curso":"4°2°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°2°","GGF(3°)→GGF 4°2°","HTR(3°)→HTR 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"PEREIRA, FRANCHESCA","curso":"4°2°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RODRIGUEZ OVEJERO,P.","curso":"4°2°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"SALAS, MELODY","curso":"4°2°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°2°","EFI(2°)→EFI 4°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"4°2°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°2°","PLG(3°)→LIT 4°2°","BLG(3°)→BLG 4°2°","ART(3°)→ART 3°4°"],"recursa":["FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°1°","GGE(2°) en SIN CURSO","EFI(3°) en 3°1°","CDC(1°) en 1°3°","EFI(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA"],"conflictos":["SIN HORARIO: GGE(2°)","CONFLICTO: EFI(3°) en 3°1°","CONFLICTO: EFI(2°) en 2°1°"]},{"nombre":"BENITEZ, MAIA","curso":"4°2°","año":4,"carga":12,"intensifica":["BLG(3°)→BLG 4°2°","GGF(3°)→GGF 4°2°"],"recursa":["GGE(2°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: GGE(2°)"]},{"nombre":"MONTIEL ALAN","curso":"4°2°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°2°","GGF(3°)→GGF 4°2°","HTR(3°)→HTR 4°2°","ART(2°)→ART 2°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALVAREZ, LUANA","curso":"4°3°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ARIAS, ISAIAS","curso":"4°3°","año":4,"carga":11,"intensifica":["ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°","GGF(3°)→GGF 4°3°","HTR(3°)→HTR 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BRAVO CHAVEZ, MARTIN","curso":"4°3°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CABRERA, LUZ MIA","curso":"4°3°","año":4,"carga":11,"intensifica":["HTR(3°)→HTR 4°3°","IGS(3°)→IGS 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CASTRO, CATALINA","curso":"4°3°","año":4,"carga":11,"intensifica":["ART(3°)→ART 3°1°","HTR(3°)→HTR 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"DEVICENZI, CATALINA","curso":"4°3°","año":4,"carga":12,"intensifica":["FQA(3°)→IAF 4°3°","GGF(3°)→GGF 4°3°","HTR(3°)→HTR 4°3°","BLG(2°)→BLG 4°3°"],"recursa":["ART(2°) en 2°3°","CDC(2°) en 2°1°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"ERASO, NAIARA","curso":"4°3°","año":4,"carga":11,"intensifica":["ART(3°)→ART 3°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESPINDOLA GOMEZ, HANNA","curso":"4°3°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°3°","PLG(3°)→LIT 4°3°","BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°"],"recursa":["FQA(3°) en 3°4°","GGF(3°) en 3°4°","HTR(3°) en 3°4°","IGS(3°) en 3°4°","FQA(2°) en 2°3°","IGS(2°) en 2°4°","EFI(3°) en 3°4°","CDC(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA","GGF"],"conflictos":["CONFLICTO: EFI(3°) en 3°4°"]},{"nombre":"GARBUYO, KEVIN","curso":"4°3°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°3°","PLG(3°)→LIT 4°3°","BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°"],"recursa":["FQA(3°) en 3°4°","GGF(3°) en 3°4°","HTR(3°) en 3°4°","IGS(3°) en 3°4°","HTR(2°) en 2°3°"],"no_cursa":["EFI","HTR","IAF","IAQ"],"conflictos":[]},{"nombre":"LUCENA, JONATHAN","curso":"4°3°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°3°","PLG(3°)→LIT 4°3°","BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°"],"recursa":["FQA(3°) en 3°4°","GGF(3°) en 3°4°","HTR(3°) en 3°4°","IGS(3°) en 3°4°","IGS(2°) en 2°4°","CDC(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":[]},{"nombre":"ORELLANO, LAYLA","curso":"4°3°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°3°","GGF(3°)→GGF 4°3°","BLG(2°)→BLG 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"OROÑO DIAZ, KIARA","curso":"4°3°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°3°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°","GGF(3°)→GGF 4°3°"],"recursa":["HTR(3°) en 3°4°","IGS(3°) en 3°4°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"4°3°","año":4,"carga":12,"intensifica":["PLG(3°)→LIT 4°3°","BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°"],"recursa":["GGF(3°) en 3°4°","HTR(3°) en 3°4°","CDC(2°) en 2°1°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"ROA, PIA","curso":"4°3°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°3°","BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°"],"recursa":["GGF(3°) en 3°4°","HTR(3°) en 3°4°","IGS(3°) en 3°4°","EFI(3°) en 3°4°"],"no_cursa":["EFI","HTR","IAF"],"conflictos":["CONFLICTO: EFI(3°) en 3°4°"]},{"nombre":"SANCHEZ, LAUTARO","curso":"4°3°","año":4,"carga":11,"intensifica":["ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°","ART(2°)→ART 2°1°","ART(1°)→ART 1°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"SECCHI, JONAS","curso":"4°3°","año":4,"carga":12,"intensifica":["BLG(3°)→BLG 4°3°","ART(3°)→ART 3°1°","FQA(3°)→IAF 4°3°","GGF(3°)→GGF 4°3°"],"recursa":["IGS(3°) en 3°4°"],"no_cursa":[],"conflictos":[]},{"nombre":"TORREZ, LAUTARO","curso":"4°3°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VERA AGUIRRE, MICAELA","curso":"4°3°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLAR, LUISANA","curso":"4°3°","año":4,"carga":11,"intensifica":["HTR(3°)→HTR 4°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BLANCO, BRISA INDIANA","curso":"4°4°","año":4,"carga":11,"intensifica":["PLG(3°)→LIT 4°4°","FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°","GGF(2°)→GGF 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESCALANTE, KIARA","curso":"4°4°","año":4,"carga":11,"intensifica":["GGF(2°)→GGF 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESCOBAR, ALAN","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","PLG(3°)→LIT 4°4°","BLG(3°)→BLG 4°4°","ART(3°)→ART 3°4°"],"recursa":["FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°2°","IGS(3°) en 3°1°","GGF(2°) en 2°1°","CDC(3°) en 3°4°","EFI(3°) en 3°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA"],"conflictos":["CONFLICTO: EFI(3°) en 3°1°"]},{"nombre":"GONZALEZ, BENJAMIN","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","BLG(3°)→BLG 4°4°","ART(3°)→ART 3°4°","FQA(3°)→IAF 4°4°"],"recursa":["GGF(3°) en 3°1°","HTR(3°) en 3°2°","IGS(3°) en 3°1°","GGF(2°) en 2°1°","CDC(3°) en 3°4°","EFI(3°) en 3°5°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":[]},{"nombre":"JAIME ROMERO, MIA IARA","curso":"4°4°","año":4,"carga":12,"intensifica":["ART(3°)→ART 3°4°","HTR(3°)→HTR 4°4°","IGS(2°)→IGS 4°4°","CDC(3°)→CDC 3°4°"],"recursa":["EFI(3°) en 3°4°"],"no_cursa":[],"conflictos":[]},{"nombre":"LUQUE, TIZIANO","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","BLG(3°)→BLG 4°4°","FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°"],"recursa":["HTR(3°) en 3°2°","CDC(3°) en 3°4°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"MARTINEZ SANDOVAL, L.","curso":"4°4°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°","HTR(3°)→HTR 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MEDINA, EVELYN","curso":"4°4°","año":4,"carga":12,"intensifica":["FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°","HTR(3°)→HTR 4°4°","GGF(2°)→GGF 4°4°"],"recursa":["BLG(2°) en 2°1°"],"no_cursa":[],"conflictos":[]},{"nombre":"PALACIOS, YAZMIN","curso":"4°4°","año":4,"carga":11,"intensifica":["ART(2°)→ART 2°3°","EFI(3°)→EFI 4°4°","EFI(2°)→EFI 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"PEREZ, MIA","curso":"4°4°","año":4,"carga":11,"intensifica":["GGF(3°)→GGF 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"REYNOSO, ZAIRA","curso":"4°4°","año":4,"carga":12,"intensifica":["PLG(3°)→LIT 4°4°","BLG(3°)→BLG 4°4°","FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°"],"recursa":["IGS(3°) en 3°1°","CDC(3°) en 3°4°","EFI(3°) en 3°4°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"ROMERO, MELODY","curso":"4°4°","año":4,"carga":11,"intensifica":["HTR(3°)→HTR 4°4°","ART(2°)→ART 2°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROMERO OCAMPO, AGUSTIN","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","PLG(3°)→LIT 4°4°","MTM(2°)→MCS 4°4°","BLG(3°)→BLG 4°4°"],"recursa":["ART(3°) en 3°1°","FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°2°","FQA(2°) en 2°1°","ART(2°) en 2°1°","CDC(3°) en 3°4°","EFI(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA","GGF"],"conflictos":["CONFLICTO: FQA(2°) en 2°1°","CONFLICTO: EFI(2°) en 2°1°"]},{"nombre":"ROQUE DOMINGUEZ, VICENTE","curso":"4°4°","año":4,"carga":11,"intensifica":["HTR(3°)→HTR 4°4°","EFI(2°)→EFI 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"TEJEDA, TOMAS ELISEO","curso":"4°4°","año":4,"carga":11,"intensifica":["FQA(3°)→IAF 4°4°","GGF(3°)→GGF 4°4°","HTR(3°)→HTR 4°4°","HTR(2°)→HTR 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"TORRES, MAIA NICOLE","curso":"4°4°","año":4,"carga":12,"intensifica":["PLG(3°)→LIT 4°4°","MTM(2°)→MCS 4°4°","PLG(2°)→LIT 4°4°","BLG(3°)→BLG 4°4°"],"recursa":["FQA(3°) en 3°1°","HTR(3°) en 3°2°","GGF(2°) en 2°1°","IGS(2°) en 2°1°","FQA(2°) en 2°2°","ART(2°) en 2°1°","HTR(2°) en 2°1°","CDC(3°) en 3°1°","EFI(3°) en 3°1°","CDC(2°) en 2°4°","CDC(1°) en 1°1°","EFI(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA","GGF","NTI","BLG","LIT","MCS"],"conflictos":["CONFLICTO: CDC(3°) en 3°1°","CONFLICTO: EFI(3°) en 3°1°","CONFLICTO: CDC(1°) en 1°1°","CONFLICTO: EFI(2°) en 2°1°"]},{"nombre":"VALDEZ,","curso":"4°4°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°4°","FQA(3°)→IAF 4°4°","HTR(3°)→HTR 4°4°","CDC(3°)→CDC 3°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"4°4°","año":4,"carga":12,"intensifica":["PLG(3°)→LIT 4°4°","BLG(3°)→BLG 4°4°","ART(3°)→ART 3°4°","FQA(3°)→IAF 4°4°"],"recursa":["GGF(3°) en 3°1°","HTR(3°) en 3°2°","CDC(2°) en 2°4°","EFI(2°) en 2°1°"],"no_cursa":["EFI","HTR","IAF"],"conflictos":["CONFLICTO: EFI(2°) en 2°1°"]},{"nombre":"VIZGARRA, JOAQUIN G.","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","PLG(3°)→LIT 4°4°","MTM(2°)→MCS 4°4°","BLG(3°)→BLG 4°4°"],"recursa":["FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°2°","FQA(2°) en 2°1°","ART(2°) en 2°1°","CDC(3°) en 3°4°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS"],"conflictos":["CONFLICTO: FQA(2°) en 2°1°"]},{"nombre":"TAPIA. MORENA","curso":"4°4°","año":4,"carga":11,"intensifica":["BLG(3°)→BLG 4°4°","HTR(3°)→HTR 4°4°","EFI(3°)→EFI 4°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MONTE JOSELYN","curso":"4°4°","año":4,"carga":12,"intensifica":["MCS(3°)→MCS 4°4°","PLG(3°)→LIT 4°4°","PLG(2°)→LIT 4°4°","BLG(3°)→BLG 4°4°"],"recursa":["FQA(3°) en 3°1°","GGF(3°) en 3°1°","HTR(3°) en 3°2°","IGS(3°) en 3°1°","GGF(2°) en 2°1°","IGS(2°) en 2°2°","CDC(3°) en 3°1°","EFI(3°) en 3°1°"],"no_cursa":["EFI","HTR","IAF","IAQ","IGS","SYA","GGF"],"conflictos":["CONFLICTO: CDC(3°) en 3°1°","CONFLICTO: EFI(3°) en 3°1°"]},{"nombre":"ALEGRE , ALMA AGUSTINA","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","IGS(4°)→IGS 5°1°","IAF(4°)→IAF 4°1°","GGF(4°)→GGF 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESPINOSA LAUTARO EZAQUIEL","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","SYA(4°)→BLG 5°1°","IAF(4°)→IAF 4°1°","GGF(4°)→GGF 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FIGUEROA BENJAMIN","curso":"5°1°","año":5,"carga":12,"intensifica":["NTI(4°)→NTI 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FLORES TATIANA NOEMI","curso":"5°1°","año":5,"carga":12,"intensifica":["IAQ(4°)→FDQ 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"JUAREZ , THIAGO","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","NTI(4°)→NTI 4°1°","SYA(4°)→BLG 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MONTIEL THIAGO","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","SYA(4°)→BLG 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","IGS(4°)→IGS 5°1°","NTI(4°)→NTI 4°1°","SYA(4°)→BLG 5°1°"],"recursa":["HTR(4°) en 4°2°","IAQ(4°) en 4°2°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"TEVEZ FABRICIO","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","IAF(4°)→IAF 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROBERT SALFI ALMA","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","SYA(4°)→BLG 5°1°","IAF(4°)→IAF 4°1°","GGF(4°)→GGF 5°1°"],"recursa":["IAQ(4°) en 4°2°","BLG(3°) en 3°4°","EFI(4°) en 4°3°","CDC(3°) en 3°4°"],"no_cursa":["EFI","HTR","CDT","IGS"],"conflictos":["CONFLICTO: CDC(3°) en 3°4°"]},{"nombre":"ARMOA PEDIR VAYNOVA","curso":"5°1°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°1°","NTI(4°)→NTI 4°1°","HTR(3°)→HTR 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALDERETE, ESTEFANO","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","HTR(4°)→HTR 5°2°","GGF(3°)→GGF 5°2°","EFI(4°)→EFI 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BUSTAMANTE,","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","IGS(4°)→IGS 5°2°","BLG(4°)→BLG 5°2°","GGF(3°)→GGF 5°2°"],"recursa":["EFI(4°) en 4°4°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"CABRERA, ANTONELLA","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CABRERA THIAGO","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","IGS(4°)→IGS 5°2°","SYA(4°)→BLG 5°2°","BLG(4°)→BLG 5°2°"],"recursa":["GGF(4°) en 4°1°","IAQ(4°) en 4°4°","ART(3°) en 3°1°"],"no_cursa":["EFI","HTR","CDT"],"conflictos":["CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: ART(3°) en 3°1°"]},{"nombre":"DE GRANDI","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","IGS(4°)→IGS 5°2°","SYA(4°)→BLG 5°2°"],"recursa":["NTIC(4°) en SIN CURSO","BLG(4°) en 4°1°","HTR(4°) en 4°1°","GGF(4°) en 4°1°","GGF(3°) en 3°1°","BLG(2°) en 2°4°","EFI(4°) en 4°4°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC","GGF","ART"],"conflictos":["SIN HORARIO: NTIC(4°)","CONFLICTO: HTR(4°) en 4°1°","CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: GGF(3°) en 3°1°"]},{"nombre":"MARTINEZ","curso":"5°2°","año":5,"carga":12,"intensifica":["SYA(4°)→BLG 5°2°","GGF(4°)→GGF 5°2°","IAQ(4°)→FDQ 5°2°","GGF(3°)→GGF 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MONTE","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","IGS(4°)→IGS 5°2°","SYA(4°)→BLG 5°2°"],"recursa":["NTIC(4°) en SIN CURSO","BLG(4°) en 4°1°","HTR(4°) en 4°1°","GGF(4°) en 4°1°","IAQ(4°) en 4°4°","GGF(3°) en 3°1°","ART(3°) en 3°1°","BLG(2°) en 2°1°","HTR(3°) en 3°1°","EFI(4°) en 4°1°","EFI(3°) en 3°1°","CDC(3°) en 3°4°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC","GGF","ART","BLG","FIS","FDQ","LIT","MCS"],"conflictos":["SIN HORARIO: NTIC(4°)","CONFLICTO: HTR(4°) en 4°1°","CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: GGF(3°) en 3°1°","CONFLICTO: ART(3°) en 3°1°","CONFLICTO: BLG(2°) en 2°1°","CONFLICTO: EFI(4°) en 4°1°","CONFLICTO: EFI(3°) en 3°1°"]},{"nombre":"REYNA","curso":"5°2°","año":5,"carga":12,"intensifica":["EFI(4°)→EFI 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RIVERO","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","IGS(4°)→IGS 5°2°","SYA(4°)→BLG 5°2°"],"recursa":["NTIC(4°) en SIN CURSO","BLG(4°) en 4°1°","HTR(4°) en 4°1°","GGF(4°) en 4°1°","IAQ(4°) en 4°4°","ART(3°) en 3°1°","HTR(3°) en 3°1°","FQA(3°) en 3°1°","EFI(4°) en 4°1°","EFI(3°) en 3°1°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC","GGF","ART","BLG","FIS","FDQ"],"conflictos":["SIN HORARIO: NTIC(4°)","CONFLICTO: HTR(4°) en 4°1°","CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: ART(3°) en 3°1°","CONFLICTO: FQA(3°) en 3°1°","CONFLICTO: EFI(4°) en 4°1°","CONFLICTO: EFI(3°) en 3°1°"]},{"nombre":"ROBLES","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","BLG(4°)→BLG 5°2°","HTR(4°)→HTR 5°2°"],"recursa":["GGF(4°) en 4°1°","GGF(3°) en 3°1°","FQA(3°) en 3°1°"],"no_cursa":["EFI","HTR","CDT"],"conflictos":["CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: GGF(3°) en 3°1°","CONFLICTO: FQA(3°) en 3°1°"]},{"nombre":"RODRIGUEZ BASUALDO","curso":"5°2°","año":5,"carga":12,"intensifica":["IGS(4°)→IGS 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ROMERO","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","SYA(4°)→BLG 5°2°","BLG(4°)→BLG 5°2°"],"recursa":["HTR(4°) en 4°1°","GGF(4°) en 4°1°","HTR(3°) en 3°1°"],"no_cursa":["EFI","HTR","CDT"],"conflictos":["CONFLICTO: HTR(4°) en 4°1°","CONFLICTO: GGF(4°) en 4°1°"]},{"nombre":"SANCHEZ","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","IGS(4°)→IGS 5°2°","SYA(4°)→BLG 5°2°"],"recursa":["BLG(4°) en 4°1°","HTR(4°) en 4°1°","GGF(4°) en 4°1°","GGF(3°) en 3°1°","HTR(3°) en 3°1°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC"],"conflictos":["CONFLICTO: HTR(4°) en 4°1°","CONFLICTO: GGF(4°) en 4°1°","CONFLICTO: GGF(3°) en 3°1°"]},{"nombre":"SAUCEDO","curso":"5°2°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°2°","LIT(4°)→LIT 5°2°","HTR(4°)→HTR 5°2°","GGF(4°)→GGF 5°2°"],"recursa":["IAQ(4°) en 4°4°","BLG(3°) en 3°1°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"5°2°","año":5,"carga":12,"intensifica":["GGF(3°)→GGF 5°2°","EFI(4°)→EFI 5°2°","EFI(4°)→EFI 5°2°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALBORNOZ, AGUSTINA","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°","MTM(3°)→MCS 5°3°","SYA(4°)→BLG 5°3°","EFI(4°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BAU, VALENTINA","curso":"5°3°","año":5,"carga":12,"intensifica":["MTM(3°)→MCS 5°3°","HTR(4°)→HTR 5°3°","EFI(4°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CABRERA, FABIAN","curso":"5°3°","año":5,"carga":12,"intensifica":["BLG(4°)→BLG 5°3°","EFI(3°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GOMEZ, ELIZABETH","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"LEIVA, XIOMARA","curso":"5°3°","año":5,"carga":12,"intensifica":["BLG(2°)→BLG 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"OROZCO, ARIADNA","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°","EFI(4°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"PANIAGUA, MAIA","curso":"5°3°","año":5,"carga":12,"intensifica":["FQA(3°)→FIS 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RAMOS, MARTINA","curso":"5°3°","año":5,"carga":12,"intensifica":["BLG(2°)→BLG 5°3°","EFI(4°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"5°3°","año":5,"carga":12,"intensifica":["MTM(3°)→MCS 5°3°","LIT(4°)→LIT 5°3°","NTI(4°)→NTI 4°2°","SYA(4°)→BLG 5°3°"],"recursa":["GGF(4°) en 4°1°","EFI(4°) en 4°4°"],"no_cursa":["EFI","HTR"],"conflictos":["CONFLICTO: GGF(4°) en 4°1°"]},{"nombre":"ROSAS LORENZO, ASHLEY","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VIZGARRA, YENIFER","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°","MTM(3°)→MCS 5°3°","LIT(4°)→LIT 5°3°","BLG(4°)→BLG 5°3°"],"recursa":["HTR(4°) en 4°1°","GGF(4°) en 4°1°","IAQ(4°) en 4°3°","EFI(4°) en 4°4°"],"no_cursa":["EFI","HTR","CDT","IGS"],"conflictos":["CONFLICTO: GGF(4°) en 4°1°"]},{"nombre":"MOUZO, ZAHIRA","curso":"5°3°","año":5,"carga":12,"intensifica":["MTM(2°)→MCS 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VELARDEZ, NEREA","curso":"5°3°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°3°","HTR(4°)→HTR 5°3°","GGF(4°)→GGF 5°3°","EFI(4°)→EFI 5°3°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALEGRE, MORENA C.","curso":"5°4°","año":5,"carga":12,"intensifica":["SYA(4°)→BLG 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BLASI, MIA","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","HTR(4°)→HTR 5°4°","GGF(4°)→GGF 5°4°","IAQ(4°)→FDQ 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CACERES SOSA, MIA","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","MTM(2°)→MCS 5°4°","IGS(4°)→IGS 5°4°","HTR(4°)→HTR 5°4°"],"recursa":["GGF(4°) en 4°2°","GGF(3°) en 3°4°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"CARABAJAL DAMARIS,","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","IGS(4°)→IGS 5°4°","SYA(4°)→BLG 5°4°","HTR(4°)→HTR 5°4°"],"recursa":["GGF(4°) en 4°2°","IAQ(4°) en 4°2°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"CESPEDES, CRISTIAN","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","MTM(3°)→MCS 5°4°","IGS(4°)→IGS 5°4°","SYA(4°)→BLG 5°4°"],"recursa":["IAF(4°) en 4°2°","BLG(4°) en 4°4°","HTR(4°) en 4°2°","GGF(4°) en 4°4°","IAQ(4°) en 4°4°","GGF(3°) en 3°4°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC","GGF"],"conflictos":["CONFLICTO: IAF(4°) en 4°2°"]},{"nombre":"DUARTE,ALEJO","curso":"5°4°","año":5,"carga":12,"intensifica":["IGS(4°)→IGS 5°4°","SYA(4°)→BLG 5°4°","BLG(4°)→BLG 5°4°","HTR(4°)→HTR 5°4°"],"recursa":["GGF(4°) en 4°2°","IAQ(4°) en 4°2°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"FLORES, JOAQUIN","curso":"5°4°","año":5,"carga":12,"intensifica":["BLG(4°)→BLG 5°4°","HTR(4°)→HTR 5°4°","IAQ(4°)→FDQ 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FRANCO MOREIRA, BRANDON","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","MTM(3°)→MCS 5°4°","SYA(4°)→BLG 5°4°","BLG(4°)→BLG 5°4°"],"recursa":["HTR(4°) en 4°2°","GGF(4°) en 4°2°","GGF(3°) en 3°4°"],"no_cursa":["EFI","HTR","CDT"],"conflictos":[]},{"nombre":"GRAMAJO, LARA","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","LIT(4°)→LIT 5°4°","BLG(4°)→BLG 5°4°","GGF(4°)→GGF 5°4°"],"recursa":["IAQ(4°) en 4°2°","EFI(4°) en 4°3°"],"no_cursa":["EFI","HTR"],"conflictos":[]},{"nombre":"HERRERA, IGNACIO","curso":"5°4°","año":5,"carga":12,"intensifica":["LIT(4°)→LIT 5°4°","BLG(4°)→BLG 5°4°","HTR(4°)→HTR 5°4°","GGF(4°)→GGF 5°4°"],"recursa":["IAQ(4°) en 4°2°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"LOPEZ, VALENTIN","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","BLG(4°)→BLG 5°4°","IAQ(4°)→FDQ 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"MOHAMED,VIOLETA","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","HTR(4°)→HTR 5°4°","GGF(3°)→GGF 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VILLALBA, ANGELA","curso":"5°4°","año":5,"carga":12,"intensifica":["LIT(4°)→LIT 5°4°","NTI(4°)→NTI 4°1°","SYA(4°)→BLG 5°4°","IAF(4°)→IAF 4°1°"],"recursa":["GGF(4°) en 4°2°","IGS(3°) en 3°4°","BLG(2°) en 2°4°","EFI(4°) en 4°3°"],"no_cursa":["EFI","HTR","CDT","IGS"],"conflictos":[]},{"nombre":"UBIRIA, RENATA","curso":"5°4°","año":5,"carga":12,"intensifica":["BLG(4°)→BLG 5°4°","HTR(4°)→HTR 5°4°","GGF(4°)→GGF 5°4°","IAQ(4°)→FDQ 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"SELLANES, DAMIAN","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","LIT(4°)→LIT 5°4°","IGS(4°)→IGS 5°4°","NTI(4°)→NTI 4°1°"],"recursa":["SYA(4°) en 4°2°","IAF(4°) en 4°2°","BLG(4°) en 4°4°","HTR(4°) en 4°2°","GGF(4°) en 4°4°","IAQ(4°) en 4°4°","BLG(3°) en 3°4°","BLG(2°) en 2°3°","EFI(4°) en 4°3°"],"no_cursa":["EFI","HTR","CDT","IGS","PYC","GGF","ART","BLG","FIS"],"conflictos":["CONFLICTO: IAF(4°) en 4°2°","CONFLICTO: BLG(3°) en 3°4°","CONFLICTO: BLG(2°) en 2°3°"]},{"nombre":"ZALAZAR, ZOE","curso":"5°4°","año":5,"carga":12,"intensifica":["MCS(4°)→MCS 5°4°","SYA(4°)→BLG 5°4°","GGF(3°)→GGF 5°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ACOSTA,LUCA MARTIN","curso":"6°1°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°1°","GGF(4°)→GGF 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ALIBERTI, ENZO JAVIER","curso":"6°1°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°1°","IGS(5°)→IGS 6°1°","PYC(5°)→PYC 5°1°","PYC(5°)→PYC 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BASUALDO, MIA AYELEN","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BENITEZ FRIAS, SERGIO","curso":"6°1°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","PYC(5°)→PYC 5°1°"],"recursa":["GGF(5°) en 5°2°","BLG(5°) en 5°2°","GGF(4°) en 4°2°"],"no_cursa":["EFI"],"conflictos":[]},{"nombre":"BURGOS, BAUTISTA","curso":"6°1°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°1°","IGS(5°)→IGS 6°1°","CDT(5°)→CDT 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CANTEROS, SANTINO","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°1°","LIT(5°)→LIT 6°1°","BLG(5°)→BLG 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"CARABAJAL,DAMIAN","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°1°","LIT(5°)→LIT 6°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"ESCOBAR, THIAGO","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","GGF(4°)→GGF 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"FERREIRA, ANGELINA","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(4°)→MCS 6°1°","FIS(5°)→FIS 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"IRALA, TANIA","curso":"6°1°","año":6,"carga":13,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","FIS(5°)→FIS 5°1°"],"recursa":["IGS(5°) en 5°3°","PYC(5°) en 5°3°","HTR(5°) en 5°2°","GGF(5°) en 5°2°","ART(5°) en 5°2°","IAF(4°) en 4°4°","FQA(3°) en 3°4°","GGF(5°) en 5°2°","IGS(5°) en 5°2°","CDT(5°) en 5°2°","EFI(5°) en 5°2°","CDC(3°) en 3°4°","EFI(5°) en 5°2°"],"no_cursa":["EFI","IGS","TYC","FHCT","ADS","QDC","BGS","LIT","FCM","MCS"],"conflictos":["CONFLICTO: GGF(5°) en 5°2°","CONFLICTO: IGS(5°) en 5°2°","CONFLICTO: CDT(5°) en 5°2°","CONFLICTO: EFI(5°) en 5°2°","CONFLICTO: CDC(3°) en 3°4°","CONFLICTO: EFI(5°) en 5°2°"]},{"nombre":"LABROCA BALDA, THOMAS","curso":"6°1°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","IGS(5°)→IGS 6°1°"],"recursa":["HTR(5°) en 5°2°","NITC(4°) en SIN CURSO"],"no_cursa":[],"conflictos":["SIN HORARIO: NITC(4°)"]},{"nombre":"LUCENA, LUCIANA","curso":"6°1°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","IGS(5°)→IGS 6°1°"],"recursa":["BLG(5°) en 5°2°","GGF(4°) en 4°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"MARTINEZ, FACUNDO","curso":"6°1°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","FIS(5°)→FIS 5°1°"],"recursa":["IGS(5°) en 5°3°","HTR(5°) en 5°2°","BLG(5°) en 5°3°","CDT(5°) en 5°2°","EFI(5°) en 5°2°"],"no_cursa":["EFI","IGS","TYC"],"conflictos":["CONFLICTO: EFI(5°) en 5°2°"]},{"nombre":"OCAMPO, TIZIANO","curso":"6°1°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°1°","LIT(5°)→LIT 6°1°","FIS(5°)→FIS 5°1°","IGS(5°)→IGS 6°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"RUIZ, MIA SELENE","curso":"6°1°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°1°","HTR(5°)→HTR 5°1°","BLG(5°)→BLG 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"SANTILLAN, SARA","curso":"6°1°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"VERON, IGNACIO","curso":"6°1°","año":6,"carga":11,"intensifica":["MCS(5°)→MCS 6°1°","MCS(4°)→MCS 6°1°","LIT(5°)→LIT 6°1°","FIS(5°)→FIS 5°1°"],"recursa":["SYA(4°) en 4°2°"],"no_cursa":[],"conflictos":[]},{"nombre":"AGÜERO, MARTINA","curso":"6°4°","año":6,"carga":10,"intensifica":["HTR(5°)→HTR 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"AGUILAR AMAYA, MARTINA","curso":"6°4°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°4°","FIS(5°)→FIS 5°1°","HTR(5°)→HTR 5°1°","CDT(5°)→CDT 5°1°"],"recursa":["EFI(5°) en 5°1°","EFI(4°) en 4°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"AMARILLA, DAIRA","curso":"6°4°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°4°","FIS(5°)→FIS 5°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"AYALA, DARIEL","curso":"6°4°","año":6,"carga":10,"intensifica":["MCS(5°)→MCS 6°4°","LIT(5°)→LIT 6°4°","FDQ(5°)→FDQ 5°1°","BLG(4°)→BLG 4°1°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"BARRETO, ANGELINA","curso":"6°4°","año":6,"carga":12,"intensifica":["FIS(5°)→FIS 5°1°","CDT(5°)→CDT 5°1°","HTR(4°)→HTR 4°1°","GGF(4°)→GGF 4°1°"],"recursa":["IAF(4°) en 4°4°","ART(2°) en 2°3°"],"no_cursa":[],"conflictos":[]},{"nombre":"BRITO, TATIANA","curso":"6°4°","año":6,"carga":10,"intensifica":["LIT(5°)→LIT 6°4°","EFI(5°)→EFI 6°4°"],"recursa":[],"no_cursa":[],"conflictos":[]},{"nombre":"GALLUZI FLORENCIA","curso":"6°4°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°4°","LIT(5°)→LIT 6°4°","FDQ(5°)→FDQ 5°1°","FIS(5°)→FIS 5°1°"],"recursa":["PYC(5°) en 5°3°","HTR(5°) en 5°2°","GGF(5°) en 5°2°","BLG(5°) en 5°3°","CDT(5°) en 5°2°","IAF(4°) en 4°4°","IAQ(4°) en 4°4°"],"no_cursa":["EFI","IGS","TYC","FHCT","ADS"],"conflictos":["CONFLICTO: CDT(5°) en 5°2°"]},{"nombre":"CAMPOS AMALIA BARBA","curso":"6°4°","año":6,"carga":13,"intensifica":["MCS(5°)→MCS 6°4°","MCS(4°)→MCS 6°4°","LIT(5°)→LIT 6°4°","FDQ(5°)→FDQ 5°1°"],"recursa":["FIS(5°) en 5°2°","PYC(5°) en 5°3°","HTR(5°) en 5°2°","GGF(5°) en 5°2°","ART(5°) en 5°2°","CDT(5°) en 5°2°","HTR(4°) en 4°4°","GGF(4°) en 4°2°","IGS(4°) en 4°2°","SYA(4°) en 4°2°","GGF(3°) en 3°4°","NTI(4°) en 4°2°","IAQ(4°) en 4°4°"],"no_cursa":["EFI","IGS","TYC","FHCT","ADS","QDC","BGS","LIT","FCM","MCS"],"conflictos":["CONFLICTO: FIS(5°) en 5°2°","CONFLICTO: CDT(5°) en 5°2°","CONFLICTO: GGF(4°) en 4°2°","CONFLICTO: IGS(4°) en 4°2°","CONFLICTO: SYA(4°) en 4°2°","CONFLICTO: GGF(3°) en 3°4°"]},{"nombre":"COCERES RUIZ, FEDERICO","curso":"6°4°","año":6,"carga":12,"intensifica":["MCS(5°)→MCS 6°4°","MCS(4°)→MCS 6°4°","LIT(5°)→LIT 6°4°","FDQ(5°)→FDQ 5°1°"],"recursa":["FIS(5°) en 5°2°","GGF(5°) en 5°2°","ART(5°) en 5°2°","BLG(5°) en 5°2°","HTR(4°) en 4°4°","BLG(4°) en 4°2°","GGF(4°) en 4°2°","IGS(4°) en 4°2°","NTI(4°) en 4°2°","EFI(5°) en 5°2°"],"no_cursa":["EFI","IGS","TYC","FHCT","ADS","QDC","BGS","LIT"],"conflictos":["CONFLICTO: FIS(5°) en 5°2°","CONFLICTO: BLG(5°) en 5°2°","CONFLICTO: IGS(4°) en 4°2°","CONFLICTO: EFI(5°) en 5°2°"]}];
+
+var API_URL = "https://script.google.com/macros/s/AKfycbyR1ihdJ6D400dcfRjkm4IwPEXNNhNDJwL2ZUPK59r-KxgDN_SgSIIlWKEKA4Q0rAztIA/exec";
+var asistHoy = [];
+
+var PROYECTOS_LIST = [
+  {e:"📖",n:"Oralidad y Lectoescritura",anio:"1 anio",est:"Activo"},
+  {e:"🕊️",n:"Memoria Verdad y Justicia",anio:"3 anio",est:"Activo"},
+  {e:"🧭",n:"Mi Recorrido",anio:"3 anio",est:"Activo"},
+  {e:"🛢️",n:"Petroleo Energia y Poder",anio:"4 anio",est:"Activo"},
+  {e:"⚡",n:"Energia Casera",anio:"5 anio",est:"Activo"},
+  {e:"🌳",n:"Parque Gualanday Hidroponia",anio:"Institucional",est:"Activo"},
+  {e:"♻️",n:"Proyecto Ecologico Huerta",anio:"Institucional",est:"Activo"},
+  {e:"💚",n:"ESI",anio:"Transversal",est:"Activo"},
+  {e:"🤝",n:"Participacion en la Escuela",anio:"Transversal",est:"Activo"},
+  {e:"🌱",n:"Proyecto Ambiental",anio:"Transversal",est:"Activo"},
+  {e:"🐾",n:"Zoonolisis",anio:"A retomar",est:"Pendiente"}
+];
+
+// DATOS SUPERVISION - sin caracteres problematicos en keys
+var SUPERV = {
+  intensif:[
+    ["JULIO","Conduccion","Verificar que TODOS los docentes cargaron el resultado de intensificacion estricta de junio (AA/CCA/CSA)","i1"],
+    ["JULIO","Conduccion","Convocar EDTE de inicio de 2C: analisis de estudiantes TEP/TED con materias pendientes","i2"],
+    ["JULIO","CITE","Actualizar RITE post cierre 1C. Identificar cambios de estado TEA a TEP y TEP a TED","i3"],
+    ["JULIO","Preceptoras","Verificar que los boletines del 1C fueron entregados a las familias con firma","i4"],
+    ["JULIO","Docentes","Elaborar propuesta de intensificacion en sentido amplio para cada estudiante TEP/TED","i5"],
+    ["AGOSTO","Conduccion","Verificar recepcion de propuestas de intensificacion de TODOS los docentes","i6"],
+    ["AGOSTO - EDTE 3","Conduccion","Analizar trayectorias TEP/TED. Revisar si las propuestas de intensificacion amplia fueron implementadas","i7"],
+    ["AGOSTO","Conduccion","Supervision estados administrativos AGOSTO: asistencia, temarios, calificadores 2C","i8"],
+    ["AGOSTO","CITE","Monitoreo 1: verificar RITE. Elaborar informe para conduccion","i9"],
+    ["AGOSTO","EOE","Taller de convivencia (Acuerdo 7). Entrevistas con familias de estudiantes TED","i10"],
+    ["SEPTIEMBRE - EDTE 4","Conduccion","Analisis nominalizado de estudiantes con 3 o mas materias en TEP/TED. Decisiones institucionales","i11"],
+    ["SEPTIEMBRE","Conduccion","Verificar activacion del Plan de Continuidad Pedagogica en casos de ausencia docente","i12"],
+    ["SEPTIEMBRE","CITE","Monitoreo 2: identificar mejoras TEP a TEA y estudiantes que siguen en TED","i13"],
+    ["SEPTIEMBRE","EOE","Intervencion con familias de estudiantes TED con alta inasistencia y materias pendientes","i14"],
+    ["OCTUBRE","Conduccion","VERIFICAR CARPETAS: al menos 2 por Departamento, comparar TEP/TED vs TEA. Propuestas iguales implica notificacion","i15"],
+    ["OCTUBRE","Conduccion","Verificar que las visitas aulicas 3 y 4 fueron realizadas","i16"],
+    ["OCTUBRE","CITE","Monitoreo 3: identificar estudiantes en riesgo de no acreditar mas de 4 materias","i17"],
+    ["OCTUBRE","Docentes","Reunion por Departamento: revision del Acuerdo 5. Al menos 4 instrumentos de evaluacion distintos","i18"],
+    ["OCTUBRE","Preceptoras","Supervision estados administrativos OCTUBRE","i19"],
+    ["NOVIEMBRE - PREVIO","Conduccion","Verificar que CADA docente tiene propuesta especifica nominalizada para cada estudiante TEP/TED","i20"],
+    ["NOVIEMBRE","Conduccion","Comunicar a familias el cronograma de intensificacion estricta por curso y materia","i21"],
+    ["NOVIEMBRE - EDTE 5","Conduccion","Reunion EDTE de cierre 2C: trayectorias finales, estudiantes que requieren acompanamiento en diciembre","i22"],
+    ["NOVIEMBRE","CITE","Monitoreo 4 final: informe de cierre con comparacion estados inicio vs cierre del 2C","i23"],
+    ["NOVIEMBRE","Docentes","Cargar resultados intensificacion estricta de noviembre (AA/CCA/CSA). Plazo: antes del 20/11","i24"],
+    ["NOVIEMBRE","EOE","Entrevistas de cierre con familias de estudiantes que terminan con materias pendientes","i25"],
+    ["DICIEMBRE","Conduccion","Verificar cierre de calificadores digitales. Todos cerrados antes del 20/12","i26"],
+    ["DICIEMBRE","Conduccion","Supervision estados administrativos DICIEMBRE: verificacion final","i27"],
+    ["DICIEMBRE","CITE","Informe anual de trayectorias: comparacion estados febrero vs diciembre 2026","i28"]
+  ],
+  ac2:[
+    ["MARZO/ABRIL","Conduccion + CITE","Presentar el Acuerdo 2 a docentes y estudiantes de 5 y 6 anio","a21"],
+    ["MARZO/ABRIL","EOE","Entrevistas grupales con 5 y 6 anio: diagnostico de proyectos post-secundarios","a22"],
+    ["MARZO/ABRIL","CITE","Relevamiento oferta nivel superior: UNLa, UNAJ, UNLZ, institutos terciarios","a23"],
+    ["JUNIO","CITE + EOE","Primera jornada de orientacion vocacional con 5 y 6 anio","a24"],
+    ["JUNIO","Conduccion","Gestionar participacion de referentes de UNLa, UNAJ o UNLZ","a25"],
+    ["AGOSTO/SEPTIEMBRE","Conduccion + CITE","Visita de 6 anio a la UNLa o la UNAJ. Acta de salida educativa","a26"],
+    ["AGOSTO/SEPTIEMBRE","EOE","Segunda instancia OVO con 6 anio. Articulacion con cuadernillo de egresantes","a27"],
+    ["AGOSTO/SEPTIEMBRE","CITE","Articulacion con polo industrial de Burzaco","a28"],
+    ["OCTUBRE/NOVIEMBRE","EOE + CITE","Jornada de cierre OVO con 5 y 6 anio","a29"],
+    ["OCTUBRE/NOVIEMBRE","Conduccion","Verificar que todos los estudiantes de 6 anio tienen la seccion OVO del cuadernillo completada","a210"],
+    ["DICIEMBRE","Conduccion","Informe de cierre del Acuerdo 2 incorporado al PES","a211"]
+  ],
+  ac3:[
+    ["FEBRERO/MARZO","Preceptoras","Informar a estudiantes y familias los umbrales 10/20/28. Firma AIC","a31"],
+    ["FEBRERO/MARZO","Conduccion","Verificar que el sistema digital de asistencia esta activo para TODOS los docentes","a32"],
+    ["MENSUAL","Preceptoras","Computo quincenal de inasistencias. Reportar a Direccion","a33"],
+    ["AL LLEGAR A 10","Preceptoras","Acta de notificacion de 10 inasistencias. Entregar a familia con firma","a34"],
+    ["AL LLEGAR A 20","Conduccion + EOE","Citar a la familia. Acta de compromiso firmada. Plan de acompaniamiento","a35"],
+    ["AL LLEGAR A 28","Conduccion","Intervencion de conduccion. Comunicar a Inspeccion. Registrar en SIC","a36"],
+    ["ABRIL","Conduccion","Primer analisis institucional de asistencia por umbral, curso y turno","a37"],
+    ["ABRIL","EDTE","Incluir analisis de asistencia en el EDTE. Cruzar con trayectorias TEP/TED","a38"],
+    ["JUNIO","Preceptoras","Computo final 1C. Listado nominalizado por umbral (10/20/28)","a39"],
+    ["JUNIO","Conduccion","Comunicar a familias de estudiantes en umbral 28 el riesgo de regularidad","a310"],
+    ["AGOSTO","Preceptoras","Reiniciar computo del 2C. Alertar sobre estudiantes que ya tenian 28 en el 1C","a311"],
+    ["AGOSTO","Conduccion","Segundo monitoreo: comparacion asistencia 1C vs inicio 2C","a312"],
+    ["DICIEMBRE","Conduccion","Analisis comparativo anual 2025 vs 2026. Informe de cierre del Acuerdo 3","a313"]
+  ],
+  ac4:[
+    ["MARZO","Conduccion","Coordinar con EP 66 el Tramo de Inicio Acompaniado. Confirmar docentes MTM y PLG","a41"],
+    ["MARZO","Docentes MTM 1 anio","Implementar cuadernillo de Matematica en articulacion con docentes de 6 grado EP 66","a42"],
+    ["MARZO","Docentes PLG 1 anio","Implementar cuadernillo PLG en articulacion con EP 66 (Los crimenes de la calle Morgue)","a43"],
+    ["MARZO","Preceptoras PB","Recepcion institucional de ingresantes: recorrida del edificio, AIC, espacios","a44"],
+    ["MARZO","Bibliotecaria Manzo Karen","Recorrida de la biblioteca con los ingresantes. Presentacion del servicio de prestamo","a45"],
+    ["MAYO","Conduccion EES 20 + EP 66","Reunion de directivos: presentacion del Proyecto de Articulacion y calendarizacion 2026","a46"],
+    ["MAYO","EOE","Solicitar a la EP 66 listado de estudiantes de 6 grado para 2027","a47"],
+    ["AGOSTO","Docentes MTM + PLG","Jornada de articulacion pedagogica con docentes de 6 grado de la EP 66","a48"],
+    ["AGOSTO","EOE","Reunion EOE-EOE (24 o 31 de agosto)","a49"],
+    ["SEPTIEMBRE","Conduccion + EFI + CE","Zombofest: jornada recreativa semana del 21/9 con un curso de la EP 66","a410"],
+    ["NOVIEMBRE","Conduccion","Jornada de disfraces: estudiantes EES 20 como invitados en la EP 66","a411"],
+    ["NOVIEMBRE","Bibliotecaria Manzo Karen","Proyecto conjunto con bibliotecaria EP 66","a412"],
+    ["NOVIEMBRE","EOE","Reunion con familias de estudiantes de 6 grado: presentacion de la EES 20","a413"],
+    ["DICIEMBRE","Conduccion + EOE","Reunion de cierre con EP 66. Nominalizacion completa de ingresantes 2027","a414"]
+  ],
+  ac6:[
+    ["MARZO","Conduccion + EOE","Presentar Acuerdo 6 y AIC al CE en ejercicio. Primera reunion del CE con conduccion","a61"],
+    ["MARZO","Preceptoras","Informar a estudiantes de 1 anio la existencia del CE y mecanismos de participacion","a62"],
+    ["MAYO","Conduccion + Docentes","Organizar la eleccion de delegados en cada curso. Acta de eleccion por curso","a63"],
+    ["MAYO","EOE","Taller con delegados electos: rol del delegado, canales de comunicacion","a64"],
+    ["MAYO","Conduccion","Actualizar listado de delegados y publicarlo en carteleria institucional","a65"],
+    ["JUNIO","Conduccion + CE","Revision del AIC con delegados y CE","a66"],
+    ["JUNIO","EOE","Taller de convivencia con el CE","a67"],
+    ["SEPTIEMBRE","Conduccion","Convocar formalmente las elecciones del CE (16/9 o semana del Estudiante). Publicar padron","a68"],
+    ["SEPTIEMBRE","Conduccion","Presidir el acto eleccionario. Acta con resultado. Proclamar lista ganadora","a69"],
+    ["SEPTIEMBRE","Conduccion + CE electo","Primera reunion del CE electo con conduccion. Acta de constitucion","a610"],
+    ["OCTUBRE","Conduccion + CE","Reunion mensual del CE: seguimiento de proyectos, evaluacion del AIC en el 2C","a611"],
+    ["DICIEMBRE","CE + Conduccion","Reunion de cierre del CE 2026. Balance del anio, propuestas para el CE 2027","a612"],
+    ["DICIEMBRE","Conduccion","Informe de cierre del Acuerdo 6 incorporado al PES","a613"]
+  ],
+  ac7:[
+    ["FEBRERO/MARZO","Conduccion + Docentes","Lectura y firma del AIC 2026 por TODOS los docentes antes del inicio de clases","a71"],
+    ["MARZO","Preceptoras","Lectura y firma del AIC con los estudiantes de cada curso en la 1 semana","a72"],
+    ["MARZO","Preceptoras","Entrega del AIC a las familias en reunion de inicio. Firma de recibido","a73"],
+    ["MARZO","EOE","Taller de convivencia de inicio con cada curso de 1 anio","a74"],
+    ["ABRIL/MAYO","Conduccion","Primer analisis de convivencia: intervenciones EOE, actas de compromiso, casos de celular","a75"],
+    ["ABRIL/MAYO","EOE","Talleres de convivencia con cursos donde se detectaron mas conflictos","a76"],
+    ["ABRIL/MAYO","Conduccion + Docentes","Verificar que las cajas de celulares estan siendo usadas en TODAS las aulas","a77"],
+    ["JUNIO","Conduccion + CE + EOE","Revision del AIC con delegados y CE","a78"],
+    ["JUNIO","EOE","Taller de prevencion de violencia y ciberacoso con 4 y 5 anio","a79"],
+    ["AGOSTO","EOE","Taller de convivencia en jornada docente del 8 de agosto","a710"],
+    ["AGOSTO","Conduccion","Segundo analisis: comparacion 1C vs inicio 2C. ¿Disminuyeron los conflictos?","a711"],
+    ["OCTUBRE","Conduccion","Verificar que las cajas de celulares siguen en uso","a712"],
+    ["OCTUBRE","EOE","Taller de convivencia digital con 2 y 3 anio","a713"],
+    ["NOVIEMBRE/DICIEMBRE","Conduccion + EOE + CE","Jornada de revision del AIC 2026: que modificar para el AIC 2027","a714"],
+    ["DICIEMBRE","EOE","Informe de cierre de intervenciones de convivencia 2026","a715"],
+    ["DICIEMBRE","Conduccion","Informe de cierre del Acuerdo 7 con indicadores de mejora","a716"]
+  ],
+  ac8:[
+    ["FEBRERO/MARZO - EDTE 1","CITE","Actualizar el RITE con datos de inicio del ciclo 2026","a81"],
+    ["FEBRERO/MARZO - EDTE 1","Conduccion + CITE","Reunion de inicio del EDTE: metodologia, calendario, responsabilidades","a82"],
+    ["FEBRERO/MARZO","Conduccion","Comunicar a TODOS los docentes el funcionamiento del EDTE y la CITE","a83"],
+    ["ABRIL - EDTE 2","CITE","Primer informe mensual: identificacion de primeros estudiantes TEA a TEP","a84"],
+    ["ABRIL - EDTE 2","Conduccion","Segunda reunion del EDTE: primeros datos, decisiones sobre intervenciones","a85"],
+    ["ABRIL","Conduccion","Supervision estados administrativos ABRIL","a86"],
+    ["JUNIO - EDTE 3","CITE","Actualizar RITE al cierre del 1C: resultados intensificacion, cambios de estado","a87"],
+    ["JUNIO - EDTE 3","Conduccion","Analisis de trayectorias al cierre del 1C. Identificar casos criticos TED","a88"],
+    ["JUNIO","Conduccion","Elaborar Excel de desaprobados del 1C. Identificar 3 materias con mas desaprobados por curso","a89"],
+    ["AGOSTO - EDTE 4","CITE","Actualizar RITE al inicio del 2C. Informe de estados","a810"],
+    ["AGOSTO - EDTE 4","Conduccion","Cuarta reunion del EDTE: revision de propuestas de intensificacion amplia","a811"],
+    ["AGOSTO","Conduccion","Supervision estados administrativos AGOSTO","a812"],
+    ["OCTUBRE - EDTE 5","CITE","Informe pre-cierre: estudiantes en riesgo de no acreditar mas de 4 materias","a813"],
+    ["OCTUBRE - EDTE 5","Conduccion","Quinta reunion EDTE: decisiones institucionales sobre casos en riesgo","a814"],
+    ["OCTUBRE","Conduccion","Verificar carpetas de estudiantes TEP/TED vs TEA","a815"],
+    ["NOVIEMBRE/DICIEMBRE - EDTE 6","CITE","Actualizar RITE al cierre del ciclo: estados finales","a816"],
+    ["NOVIEMBRE/DICIEMBRE - EDTE 6","Conduccion","Sexta reunion EDTE: balance del ciclo. Cuantos mejoraron, que intervenciones funcionaron","a817"],
+    ["DICIEMBRE","CITE","Informe anual de trayectorias para la Jornada de Autoevaluacion","a818"],
+    ["DICIEMBRE","Conduccion","Supervision estados administrativos DICIEMBRE: cierre definitivo","a819"]
+  ]
+};
+
+var COLORES_MES = ["#1F4E79","#375623","#C55A11","#7030A0","#C00000","#2E75B6","#1B5E20","#BF360C"];
+
+// ═══ NAVEGACION ═══
+function showTab(id) {
+  document.querySelectorAll(".tab-pane").forEach(function(p) { p.classList.remove("active"); });
+  document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); });
+  document.getElementById("tab-" + id).classList.add("active");
+  event.target.classList.add("active");
+}
+
+// ═══ FECHA ═══
+var HOY = new Date();
+var HOY_STR = ("0"+HOY.getDate()).slice(-2)+"/"+("0"+(HOY.getMonth()+1)).slice(-2)+"/"+HOY.getFullYear();
+document.getElementById("fecha-p3").textContent = HOY.toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+// ═══ SUPERVISION - RENDER CON EVENT DELEGATION ═══
+function renderSupervTab(key) {
+  var divId = "div-" + key;
+  var div = document.getElementById(divId);
+  if (!div) return;
+  var items = SUPERV[key];
+  if (!items) return;
+
+  var porMes = {};
+  items.forEach(function(row) {
+    var mes = row[0];
+    if (!porMes[mes]) porMes[mes] = [];
+    porMes[mes].push(row);
+  });
+
+  var html = "";
+  var ci = 0;
+  Object.keys(porMes).forEach(function(mes) {
+    var color = COLORES_MES[ci % COLORES_MES.length]; ci++;
+    html += '<div class="mes-header" style="background:' + color + '">📅 ' + mes + '</div>';
+    porMes[mes].forEach(function(row) {
+      var actor = row[1];
+      var texto = row[2];
+      var id = row[3];
+      var ok = localStorage.getItem("sp_" + id) === "1";
+      html += '<div class="item-card' + (ok ? " done" : "") + '" data-id="' + id + '" data-key="' + key + '">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">';
+      html += '<div style="flex:1">';
+      html += '<span class="item-actor">' + actor + '</span>';
+      html += '<span class="item-texto">' + texto + '</span>';
+      html += '<div style="margin-top:6px"><input type="text" value="' + (localStorage.getItem("sp_obs_" + id) || "") + '" placeholder="Observacion..." class="obs-input sp-obs-input" data-id="' + id + '"></div>';
+      html += '</div>';
+      html += '<button class="btn-toggle sp-toggle-btn' + (ok ? " done" : "") + '" data-id="' + id + '" data-key="' + key + '">' + (ok ? "Realizado" : "Pendiente") + '</button>';
+      html += '</div></div>';
+    });
+  });
+
+  div.innerHTML = html;
+}
+
+// Event delegation para toggles de supervision
+document.addEventListener("click", function(e) {
+  if (e.target.classList.contains("sp-toggle-btn")) {
+    var id = e.target.getAttribute("data-id");
+    var key = e.target.getAttribute("data-key");
+    var ok = localStorage.getItem("sp_" + id) === "1";
+    localStorage.setItem("sp_" + id, ok ? "0" : "1");
+    renderSupervTab(key);
+  }
+});
+
+// Event delegation para observaciones de supervision
+document.addEventListener("change", function(e) {
+  if (e.target.classList.contains("sp-obs-input")) {
+    var id = e.target.getAttribute("data-id");
+    localStorage.setItem("sp_obs_" + id, e.target.value);
+  }
+});
+
+// ═══ ASISTENCIA ═══
+function normFecha(f) {
+  if (!f) return "";
+  var s = String(f).trim();
+  if (s.indexOf("T") > -1) {
+    var d = new Date(s);
+    var loc = new Date(d.getTime() - 3*60*60*1000);
+    return ("0"+loc.getUTCDate()).slice(-2)+"/"+("0"+(loc.getUTCMonth()+1)).slice(-2)+"/"+loc.getUTCFullYear();
+  }
+  var p = s.split("/");
+  if (p.length === 3) return ("0"+p[0].trim()).slice(-2)+"/"+("0"+p[1].trim()).slice(-2)+"/"+p[2].trim();
+  return s;
+}
+
+document.getElementById("btn-cargar-asist").addEventListener("click", function() {
+  document.getElementById("status-asist").textContent = "Cargando...";
+  fetch(API_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var rows = data.rows || [];
+      asistHoy = rows.filter(function(r) { return normFecha(r.fecha) === HOY_STR; });
+      document.getElementById("status-asist").textContent = "Actualizado: " + new Date().toLocaleTimeString("es-AR") + " (" + asistHoy.length + " registros hoy)";
+      mostrarCurso();
+    })
+    .catch(function(e) {
+      document.getElementById("status-asist").textContent = "Error: " + e.message;
+    });
+});
+
+document.getElementById("sel-curso").addEventListener("change", mostrarCurso);
+
+function mostrarCurso() {
+  var curso = document.getElementById("sel-curso").value;
+  var div = document.getElementById("detalle-curso");
+  if (!curso) { div.innerHTML = "<div class='card'><p style='color:#aaa;text-align:center;padding:20px'>Selecciona un curso arriba</p></div>"; return; }
+
+  var alumnos = SUMMARY.filter(function(s) { return s.curso === curso; });
+  var conInt = alumnos.filter(function(s) { return s.intensifica && s.intensifica.length; }).length;
+  var conRec = alumnos.filter(function(s) { return s.recursa && s.recursa.length; }).length;
+  var asistCurso = asistHoy.filter(function(r) { return r.curso === curso; });
+
+  var html = '<div class="mc-row">';
+  html += '<div class="mc"><div class="mc-num warn">' + alumnos.length + '</div><div class="mc-label">En EDTE</div></div>';
+  html += '<div class="mc"><div class="mc-num warn">' + conInt + '</div><div class="mc-label">Intensifican</div></div>';
+  html += '<div class="mc"><div class="mc-num danger">' + conRec + '</div><div class="mc-label">Recursan</div></div>';
+  html += '<div class="mc"><div class="mc-num">' + asistCurso.length + '</div><div class="mc-label">Registros hoy</div></div>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-title">Trayectorias EDTE - ' + curso + '</div>';
+  html += '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Alumno/a</th><th>Intensifica</th><th>Recursa</th><th>Estado</th><th>Obs. EDTE</th></tr></thead><tbody>';
+  if (alumnos.length) {
+    alumnos.forEach(function(s) {
+      var n = (s.intensifica||[]).length + (s.recursa||[]).length;
+      var est = n>=5 ? '<span class="badge bdanger">TED</span>' : n>=1 ? '<span class="badge bwarn">TEP</span>' : '<span class="badge bok">TEA</span>';
+      var key = ("tray_" + s.nombre + "_" + s.curso).replace(/[^a-zA-Z0-9_]/g, "_");
+      var obs = localStorage.getItem(key) || "";
+      html += '<tr><td><strong>' + s.nombre + '</strong></td>';
+      html += '<td>' + ((s.intensifica||[]).map(function(m) { return '<span class="badge bwarn" style="margin:1px;font-size:.65rem">' + m.split(" ")[0] + '</span>'; }).join("") || "—") + '</td>';
+      html += '<td>' + ((s.recursa||[]).map(function(m) { return '<span class="badge bdanger" style="margin:1px;font-size:.65rem">' + m + '</span>'; }).join("") || "—") + '</td>';
+      html += '<td>' + est + '</td>';
+      html += '<td><input type="text" value="' + obs + '" placeholder="Obs..." class="obs-input tray-obs" data-key="' + key + '"></td></tr>';
+    });
+  } else {
+    html += '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">Sin datos EDTE para este curso</td></tr>';
+  }
+  html += '</tbody></table></div></div>';
+
+  if (asistCurso.length) {
+    html += '<div class="card"><div class="card-title">Asistencia de hoy - ' + curso + '</div>';
+    html += '<table class="tbl"><thead><tr><th>Alumno/a</th><th>Materia</th><th>Estado</th><th>Clase</th></tr></thead><tbody>';
+    asistCurso.forEach(function(r) {
+      var cls = r.estado==="A"?"bdanger":r.estado==="T"?"bwarn":"bok";
+      var est = r.estado==="A"?"Ausente":r.estado==="T"?"Tarde":"Presente";
+      html += '<tr><td><strong>' + (r.alumno||"—") + '</strong></td><td>' + (r.materia||"—") + '</td><td><span class="badge ' + cls + '">' + est + '</span></td><td>' + (r.nclase||"—") + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  div.innerHTML = html;
+}
+
+// Event delegation para observaciones de trayectorias
+document.addEventListener("change", function(e) {
+  if (e.target.classList.contains("tray-obs")) {
+    localStorage.setItem(e.target.getAttribute("data-key"), e.target.value);
+  }
+});
+
+// ═══ DOCENTES ═══
+function initDocentes() {
+  var items = ["Libro de Temas completo y firmado","Calificador con notas al dia","Planificacion anual presentada","Diagnostico inicial entregado","Declaracion jurada de programa","Asistencia en sistema ABC","Comunicacion con preceptora ante ausencias"];
+  ["chk-abril","chk-agosto"].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var h = "";
+    items.forEach(function(item, i) {
+      var checked = localStorage.getItem(id+"_"+i) === "1";
+      h += '<div class="chk-dia"><input type="checkbox"' + (checked?' checked':'') + ' data-docid="'+id+'_'+i+'">';
+      h += '<label class="chk-label' + (checked?' done':'') + '">' + item + '</label></div>';
+    });
+    el.innerHTML = h;
+  });
+
+  var tbody = document.getElementById("tbody-visitas");
+  if (tbody) {
+    var rows = "";
+    ["N1 - 1C","N2 - 1C","N3 - 2C","N4 - 2C"].forEach(function(v, i) {
+      rows += '<tr><td><strong>' + v + '</strong></td>';
+      rows += '<td><input type="text" value="' + (localStorage.getItem("vis_doc_"+i)||"") + '" class="obs-input vis-doc" data-vi="'+i+'"></td>';
+      rows += '<td><input type="text" value="' + (localStorage.getItem("vis_cur_"+i)||"") + '" class="obs-input vis-cur" data-vi="'+i+'"></td>';
+      rows += '<td><span class="badge bblue">' + (i<2?"1C":"2C") + '</span></td>';
+      rows += '<td><input type="text" value="' + (localStorage.getItem("vis_obs_"+i)||"") + '" class="obs-input vis-obs" data-vi="'+i+'"></td></tr>';
+    });
+    tbody.innerHTML = rows;
+  }
+
+  var obsEl = document.getElementById("obs-doc");
+  if (obsEl) obsEl.value = localStorage.getItem("obs_doc") || "";
+}
+
+document.addEventListener("change", function(e) {
+  if (e.target.getAttribute("data-docid")) {
+    var key = e.target.getAttribute("data-docid");
+    localStorage.setItem(key, e.target.checked ? "1" : "0");
+    e.target.nextElementSibling.classList.toggle("done", e.target.checked);
+  }
+  if (e.target.classList.contains("vis-doc")) localStorage.setItem("vis_doc_"+e.target.getAttribute("data-vi"), e.target.value);
+  if (e.target.classList.contains("vis-cur")) localStorage.setItem("vis_cur_"+e.target.getAttribute("data-vi"), e.target.value);
+  if (e.target.classList.contains("vis-obs")) localStorage.setItem("vis_obs_"+e.target.getAttribute("data-vi"), e.target.value);
+});
+
+document.getElementById("btn-save-doc").addEventListener("click", function() {
+  localStorage.setItem("obs_doc", document.getElementById("obs-doc").value);
+  this.textContent = "✓ Guardado";
+  setTimeout(function() { document.getElementById("btn-save-doc").textContent = "💾 Guardar"; }, 1500);
+});
+
+// ═══ PROYECTOS ═══
+function initProyectos() {
+  var tbody = document.getElementById("tbody-proy");
+  if (!tbody) return;
+  var rows = "";
+  PROYECTOS_LIST.forEach(function(p, i) {
+    var cls = p.est === "Activo" ? "bok" : "bwarn";
+    var obs = localStorage.getItem("proy_obs_"+i) || "";
+    rows += '<tr><td>' + p.e + '</td><td><strong>' + p.n + '</strong></td>';
+    rows += '<td><span class="badge bblue">' + p.anio + '</span></td>';
+    rows += '<td><span class="badge ' + cls + '">' + p.est + '</span></td>';
+    rows += '<td><input type="text" value="' + obs + '" class="obs-input proy-obs" data-pi="'+i+'"></td></tr>';
+  });
+  tbody.innerHTML = rows;
+}
+
+document.addEventListener("change", function(e) {
+  if (e.target.classList.contains("proy-obs")) {
+    localStorage.setItem("proy_obs_"+e.target.getAttribute("data-pi"), e.target.value);
+  }
+});
+
+// ═══ AIC ═══
+function initAIC() {
+  var el = document.getElementById("chk-aic");
+  if (!el) return;
+  var items = ["AIC presentado al personal en jornada institucional","Socializado con estudiantes por curso (delegados)","Socializado con familias en reunion de inicio","Firmas docentes completadas","Firmas estudiantes completadas","Firmas familias completadas","AIC en carteleria institucional","Revisado con Centro de Estudiantes"];
+  var h = "";
+  items.forEach(function(item, i) {
+    var checked = localStorage.getItem("aic_"+i) === "1";
+    h += '<div class="chk-dia"><input type="checkbox"' + (checked?' checked':'') + ' data-aicid="'+i+'">';
+    h += '<label class="chk-label' + (checked?' done':'') + '">' + item + '</label></div>';
+  });
+  el.innerHTML = h;
+
+  var obsEl = document.getElementById("obs-aic");
+  if (obsEl) obsEl.value = localStorage.getItem("obs_aic") || "";
+}
+
+document.addEventListener("change", function(e) {
+  if (e.target.getAttribute("data-aicid") !== null && e.target.getAttribute("data-aicid") !== undefined && e.target.tagName === "INPUT" && e.target.type === "checkbox") {
+    var id = e.target.getAttribute("data-aicid");
+    if (id !== null) {
+      localStorage.setItem("aic_"+id, e.target.checked ? "1" : "0");
+      e.target.nextElementSibling.classList.toggle("done", e.target.checked);
+    }
+  }
+});
+
+document.getElementById("btn-save-aic").addEventListener("click", function() {
+  localStorage.setItem("obs_aic", document.getElementById("obs-aic").value);
+  this.textContent = "✓ Guardado";
+  setTimeout(function() { document.getElementById("btn-save-aic").textContent = "💾 Guardar"; }, 1500);
+});
+
+// ═══ INIT ═══
+window.onload = function() {
+  initDocentes();
+  initProyectos();
+  initAIC();
+  // Renderizar solo la primera solapa de supervision
+  renderSupervTab("intensif");
+  // Renderizar las demas cuando se abran
+};
+
+// Renderizar supervision al cambiar de tab
+document.querySelectorAll(".tab").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var tabId = this.getAttribute("onclick").replace("showTab(","").replace(")","").replace(/'/g,"");
+    if (SUPERV[tabId]) {
+      setTimeout(function() { renderSupervTab(tabId); }, 50);
+    }
+  });
+});
+
+</script>
+</body>
+</html>
