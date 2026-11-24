@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jornada RA · Votá</title>
+<style>
+/* Pizarrón, pensado para celular: una columna, botones grandes */
+:root{--ink:#10282E;--panel:#183A41;--panel2:#21474F;--chalk:#F3F1E8;--muted:#A9C1BE;--marker:#FFC845;--coral:#FF7A66;--mint:#62D6A8;--sky:#7CC4F2;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--chalk);font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:17px}
+header{padding:18px 16px 8px}
+h1{margin:0;font-size:24px;line-height:1.15}
+h1 span{color:var(--marker)}
+.sub{color:var(--muted);font-size:14px;margin-top:4px}
+nav{position:sticky;top:0;z-index:2;display:flex;gap:6px;padding:10px 16px;background:var(--ink);border-bottom:1px solid var(--panel2)}
+nav button{flex:1;border:0;border-radius:10px;padding:10px 4px;background:var(--panel);color:var(--chalk);font:inherit;font-size:14px;font-weight:700}
+nav button.on{background:var(--marker);color:var(--ink)}
+main{padding:14px 16px 90px;display:flex;flex-direction:column;gap:12px}
+section{display:none;flex-direction:column;gap:12px}
+section.on{display:flex}
+.card{background:var(--panel);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.q{font-weight:700;line-height:1.3}
+.n{color:var(--marker);font-weight:800;margin-right:6px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts.row{flex-direction:row}
+.opt{flex:1;border:2px solid var(--panel2);background:var(--ink);color:var(--chalk);border-radius:12px;padding:14px 12px;font:inherit;font-weight:700;text-align:left}
+.opts.row .opt{text-align:center}
+.opt.sel{border-color:var(--marker);background:var(--marker);color:var(--ink)}
+.opt.m.sel{background:var(--coral);border-color:var(--coral)}
+.opt.r.sel{background:var(--mint);border-color:var(--mint)}
+.ok{font-size:13px;color:var(--mint);min-height:1em}
+.ok.err{color:var(--coral)}
+label{font-size:14px;color:var(--muted)}
+input,select,textarea{width:100%;background:var(--ink);color:var(--chalk);border:1px solid var(--panel2);border-radius:10px;padding:12px;font:inherit}
+textarea{min-height:110px;resize:vertical}
+.send{border:0;border-radius:12px;padding:14px;background:var(--marker);color:var(--ink);font:inherit;font-weight:800}
+.note{color:var(--muted);font-size:14px;line-height:1.4}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+.warn{background:var(--coral);color:var(--ink);padding:12px 16px;font-weight:700;display:none}
+</style>
+</head>
+<body>
+<div class="warn" id="warn">Falta configurar la dirección de la planilla (API). Avisale a quien coordina.</div>
+<header>
+  <h1>Jornada Institucional · <span>Régimen Académico</span></h1>
+  <div class="sub">Respondé a medida que avanzamos. Podés cambiar tu respuesta: cuenta la última.</div>
+</header>
+<nav>
+  <button class="on" data-t="t1">Termómetro</button>
+  <button data-t="t2">Mito o realidad</button>
+  <button data-t="t3">Semáforo</button>
+</nav>
+<main>
+  <section class="on" id="t1">
+    <div class="card">
+      <div class="q">¿Cómo llegás hoy al tema intensificación y materias pendientes?</div>
+      <div class="opts" data-q="T"></div>
+      <div class="ok" id="ok-T"></div>
+    </div>
+  </section>
+
+  <section id="t2">
+    <p class="note">Esperá a que se lea cada frase en voz alta y marcá tu respuesta.</p>
+    <div id="mr"></div>
+  </section>
+
+  <section id="t3">
+    <div class="card">
+      <p class="note">Una persona por grupo carga los aportes. Se pueden mandar varios, uno por vez.</p>
+      <div><label for="grupo">Grupo o rol</label><input id="grupo" placeholder="Ej.: Grupo 2 · Preceptora de 1° año"></div>
+      <div><label for="preg">Pregunta</label>
+        <select id="preg">
+          <option value="A">A · ¿Qué avances hay que consolidar?</option>
+          <option value="B">B · ¿Qué mejoró la enseñanza y los recorridos?</option>
+          <option value="C">C · ¿Los cambios responden a nuestros problemas?</option>
+          <option value="D">D · ¿Qué otros aportes sumamos?</option>
+        </select>
+      </div>
+      <div><label for="txt">Aporte</label><textarea id="txt" placeholder="Escribí el aporte del grupo"></textarea></div>
+      <button class="send" id="enviar">Enviar aporte</button>
+      <div class="ok" id="ok-S"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+// ▼▼▼ PEGAR ACÁ LA URL DEL APPS SCRIPT (termina en /exec) ▼▼▼
+const API = 'https://script.google.com/macros/s/AKfycbyL09oGwoaoO0PqzozK6GhKkRDdHSQ-AaQ_zQuUF8ZbyZKBAM8dxkPipQGwhPO7bm0Z9Q/exec';
+// ▲▲▲
+
+const T=['Lo implemento sin drama','Lo entiendo, con dudas','Lo aplico porque toca','Me cuesta organizarlo','Me desborda'];
+const MR=[
+ 'Un estudiante con una materia pendiente de 2° va a la intensificación de julio de 3°.',
+ 'Las Comisiones Evaluadoras son las viejas mesas de examen con otro nombre.',
+ 'En una orientada, con 4 pendientes se acredita en Comisión Evaluadora.',
+ 'En una técnica, con 5 pendientes ya hay que recursar.',
+ 'Sin aprobar, sin asistencia mínima y sin ir a intensificar, esa materia se recursa igual.',
+ 'La escuela sigue eligiendo un modelo de intensificación para pendientes.',
+ 'La profundización puede ser una radio escolar o una feria de ciencias.',
+ 'En 2027, con 6 pendientes en una orientada, se recursan obligatoriamente las 6.'
+];
+const $=s=>document.querySelector(s);
+const ready=API.startsWith('https://');
+if(!ready)$('#warn').style.display='block';
+
+let device;
+try{device=localStorage.getItem('jra-dev');if(!device){device=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('jra-dev',device)}}catch(e){device=Math.random().toString(36).slice(2)}
+let mine={};try{mine=JSON.parse(localStorage.getItem('jra-mine')||'{}')}catch(e){}
+function remember(){try{localStorage.setItem('jra-mine',JSON.stringify(mine))}catch(e){}}
+
+async function send(q,v,nombre){
+  if(!ready)throw new Error('sin API');
+  await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({device,q,v,nombre:nombre||''})});
+}
+function flag(id,ok,msg){const el=$('#ok-'+id);el.className='ok'+(ok?'':' err');el.textContent=msg}
+
+// Pestañas
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+  window.scrollTo(0,0);
+});
+
+// Botones de voto
+function vote(btn,q,v,group){
+  group.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o===btn));
+  mine[q]=v;remember();flag(q,true,'Enviando…');
+  send(q,v).then(()=>flag(q,true,'✓ Respuesta registrada')).catch(()=>flag(q,false,'No se pudo enviar. Revisá la conexión y tocá de nuevo.'));
+}
+const tg=document.querySelector('[data-q="T"]');
+T.forEach((t,i)=>{const b=document.createElement('button');b.className='opt'+(mine.T===String(i+1)?' sel':'');b.textContent=(i+1)+' · '+t;b.onclick=()=>vote(b,'T',String(i+1),tg);tg.appendChild(b)});
+
+const mr=$('#mr');
+MR.forEach((f,i)=>{
+  const q='M'+(i+1);
+  const c=document.createElement('div');c.className='card';
+  const p=document.createElement('div');p.className='q';
+  const n=document.createElement('span');n.className='n';n.textContent=(i+1)+'.';p.append(n,document.createTextNode(f));
+  const g=document.createElement('div');g.className='opts row';
+  [['Mito','m'],['Realidad','r']].forEach(([lab,cls])=>{const b=document.createElement('button');b.className='opt '+cls+(mine[q]===lab?' sel':'');b.textContent=lab;b.onclick=()=>vote(b,q,lab,g);g.appendChild(b)});
+  const ok=document.createElement('div');ok.className='ok';ok.id='ok-'+q;
+  c.append(p,g,ok);mr.appendChild(c);
+});
+
+// Semáforo
+try{$('#grupo').value=localStorage.getItem('jra-grupo')||''}catch(e){}
+$('#enviar').onclick=()=>{
+  const v=$('#txt').value.trim(),g=$('#grupo').value.trim();
+  if(!v){flag('S',false,'Escribí el aporte antes de enviar.');return}
+  try{localStorage.setItem('jra-grupo',g)}catch(e){}
+  flag('S',true,'Enviando…');
+  send($('#preg').value,v,g).then(()=>{flag('S',true,'✓ Aporte enviado. Podés mandar otro.');$('#txt').value=''}).catch(()=>flag('S',false,'No se pudo enviar. Revisá la conexión y probá de nuevo.'));
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jornada RA · Panel en vivo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Panel para proyectar: resultados en vivo, se actualiza solo cada 5 segundos */
+:root{--ink:#10282E;--panel:#183A41;--panel2:#21474F;--chalk:#F3F1E8;--muted:#A9C1BE;--marker:#FFC845;--coral:#FF7A66;--mint:#62D6A8;--sky:#7CC4F2;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--chalk);font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:clamp(15px,1.2vw,21px)}
+header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 28px;border-bottom:1px solid var(--panel2)}
+h1{margin:0;font-size:1.6em;flex:1;min-width:280px}
+h1 span{color:var(--marker)}
+.pill{background:var(--panel);border-radius:999px;padding:6px 14px;font-variant-numeric:tabular-nums}
+.pill b{color:var(--marker)}
+.live{width:10px;height:10px;border-radius:50%;background:var(--mint);display:inline-block;margin-right:6px}
+.live.off{background:var(--coral)}
+nav{display:flex;gap:8px}
+nav button,.btn{border:0;border-radius:10px;padding:10px 16px;background:var(--panel);color:var(--chalk);font:inherit;font-weight:700;cursor:pointer}
+nav button.on,.btn.y{background:var(--marker);color:var(--ink)}
+main{padding:22px 28px}
+section{display:none}
+section.on{display:block}
+h2{margin:0 0 16px;font-size:1.5em}
+.bars{display:flex;flex-direction:column;gap:12px;max-width:1100px}
+.bar{display:grid;grid-template-columns:minmax(200px,320px) 1fr 3.5em;gap:12px;align-items:center}
+.track{height:34px;background:var(--panel);border-radius:8px;overflow:hidden}
+.fill{height:100%;border-radius:8px;transition:width .5s}
+.num{font-weight:800;font-variant-numeric:tabular-nums;text-align:right;font-size:1.2em}
+.mr{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:1000px){.mr{grid-template-columns:1fr}}
+.mrc{background:var(--panel);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;border:2px solid transparent}
+.mrc .f{font-weight:700;line-height:1.3}
+.mrc .f b{color:var(--marker)}
+.split{display:flex;height:30px;border-radius:8px;overflow:hidden;background:var(--panel2)}
+.split div{display:flex;align-items:center;padding:0 10px;font-weight:800;color:var(--ink);white-space:nowrap;transition:width .5s;font-size:.85em}
+.sm{background:var(--coral)}.sr{background:var(--mint)}
+.verd{font-size:.9em;color:var(--muted)}
+.show .mrc.mito{border-color:var(--coral)}.show .mrc.real{border-color:var(--mint)}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
+@media (max-width:1100px){.board{grid-template-columns:1fr 1fr}}
+.col{background:var(--panel);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:200px}
+.col h3{margin:0;font-size:1em;display:flex;gap:8px;align-items:center}
+.dot{width:16px;height:16px;border-radius:50%;flex:none}
+.sticky{background:var(--chalk);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:.9em;line-height:1.3}
+.sticky small{display:block;color:#4f6467;margin-top:4px}
+.empty{color:var(--muted);font-size:.9em}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+textarea{width:100%;min-height:160px;margin-top:12px;background:var(--panel);color:var(--chalk);border:1px solid var(--panel2);border-radius:10px;padding:12px;font:inherit;font-size:.85em;display:none}
+textarea.on{display:block}
+.qrbox{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+#qr{background:#fff;padding:14px;border-radius:14px}
+.link{font-size:1.3em;font-weight:700;color:var(--marker);word-break:break-all;max-width:640px}
+.msg{background:var(--coral);color:var(--ink);padding:12px 28px;font-weight:700;display:none}
+button:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="msg" id="msg"></div>
+<header>
+  <h1>Jornada Institucional · <span>resultados en vivo</span></h1>
+  <span class="pill"><span class="live off" id="live"></span><b id="part">0</b> participantes</span>
+  <nav>
+    <button class="on" data-t="s0">Entrar</button>
+    <button data-t="s1">Termómetro</button>
+    <button data-t="s2">Mito o realidad</button>
+    <button data-t="s3">Semáforo</button>
+  </nav>
+</header>
+<main>
+  <section class="on" id="s0">
+    <h2>Entrá desde tu celular</h2>
+    <div class="qrbox"><div id="qr"></div><div><p>Escaneá el código o abrí:</p><p class="link" id="link"></p></div></div>
+  </section>
+  <section id="s1">
+    <h2>¿Cómo llegamos al tema?</h2>
+    <div class="bars" id="therm"></div>
+  </section>
+  <section id="s2">
+    <div class="tools"><h2 style="margin:0;flex:1">¿Mito o realidad?</h2><button class="btn y" id="reveal">Mostrar respuestas</button></div>
+    <div class="mr" id="mr"></div>
+  </section>
+  <section id="s3">
+    <div class="tools"><h2 style="margin:0;flex:1">Semáforo: aportes de los grupos</h2><button class="btn y" id="copy">Copiar para el formulario</button></div>
+    <div class="board" id="board"></div>
+    <textarea id="out" readonly aria-label="Texto para copiar"></textarea>
+  </section>
+</main>
+
+<script>
+// ▼▼▼ PEGAR ACÁ LA MISMA URL DEL APPS SCRIPT (termina en /exec) ▼▼▼
+const API = 'https://script.google.com/macros/s/AKfycbyL09oGwoaoO0PqzozK6GhKkRDdHSQ-AaQ_zQuUF8ZbyZKBAM8dxkPipQGwhPO7bm0Z9Q/exec';
+// ▲▲▲
+
+const T=['Lo implemento sin drama','Lo entiendo, con dudas','Lo aplico porque toca','Me cuesta organizarlo','Me desborda'];
+const TC=['var(--mint)','var(--sky)','var(--chalk)','var(--marker)','var(--coral)'];
+const MR=[
+ ['Un estudiante con una materia pendiente de 2° va a la intensificación de julio de 3°.','Mito'],
+ ['Las Comisiones Evaluadoras son las viejas mesas de examen con otro nombre.','Mito'],
+ ['En una orientada, con 4 pendientes se acredita en Comisión Evaluadora.','Realidad'],
+ ['En una técnica, con 5 pendientes ya hay que recursar.','Mito'],
+ ['Sin aprobar, sin asistencia mínima y sin ir a intensificar, esa materia se recursa igual.','Realidad'],
+ ['La escuela sigue eligiendo un modelo de intensificación para pendientes.','Mito'],
+ ['La profundización puede ser una radio escolar o una feria de ciencias.','Realidad'],
+ ['En 2027, con 6 pendientes en una orientada, se recursan obligatoriamente las 6.','Mito']
+];
+const Q={A:['var(--mint)','A · Avances a consolidar','¿Qué avances en la implementación se produjeron en la escuela y hay que consolidar?'],B:['var(--sky)','B · Lo que mejoró','¿Qué aspectos del RA mejoraron la enseñanza y los recorridos de los estudiantes?'],C:['var(--marker)','C · ¿Responde a los problemas?','¿En qué medida los problemas que tuvimos encuentran respuesta en las modificaciones?'],D:['var(--coral)','D · Otros aportes','¿Qué otros aportes podrían incorporarse a la propuesta?']};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let data={conteo:{},textos:[],participantes:0};
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+});
+
+// QR y link a la página de votación (misma carpeta)
+const votar=new URL('votar.html',location.href).href;
+$('#link').textContent=votar;
+try{new QRCode($('#qr'),{text:votar,width:260,height:260})}catch(e){$('#qr').style.display='none'}
+
+function render(){
+  $('#part').textContent=data.participantes||0;
+  const t=data.conteo.T||{};const tot=T.reduce((a,_,i)=>a+(t[i+1]||0),0);const mx=Math.max(1,...T.map((_,i)=>t[i+1]||0));
+  $('#therm').innerHTML=T.map((l,i)=>{const v=t[i+1]||0;return `<div class="bar"><span>${i+1} · ${l}</span><div class="track"><div class="fill" style="width:${v/mx*100}%;background:${TC[i]}"></div></div><span class="num">${v}</span></div>`}).join('')+`<p class="verd">${tot} respuestas</p>`;
+  $('#mr').innerHTML=MR.map((m,i)=>{const c=data.conteo['M'+(i+1)]||{};const mi=c.Mito||0,re=c.Realidad||0,s=mi+re;const pm=s?Math.round(mi/s*100):0,pr=s?100-pm:0;const ok=m[1]==='Mito'?pm:pr;
+    return `<div class="mrc ${m[1]==='Mito'?'mito':'real'}"><div class="f"><b>${i+1}.</b> ${m[0]}</div><div class="split">${s?`<div class="sm" style="width:${pm}%">${pm?'Mito '+pm+'%':''}</div><div class="sr" style="width:${pr}%">${pr?'Realidad '+pr+'%':''}</div>`:''}</div><div class="verd">${s} votos<span class="ans" hidden> · Respuesta: <b>${m[1]}</b> · acertó el ${ok}%</span></div></div>`}).join('');
+  const shown=$('#mr').parentElement.classList.contains('show');document.querySelectorAll('.ans').forEach(a=>a.hidden=!shown);
+  $('#board').innerHTML=Object.entries(Q).map(([k,q])=>{const items=data.textos.filter(x=>x.q===k);return `<div class="col"><h3><span class="dot" style="background:${q[0]}"></span>${q[1]}</h3>${items.length?items.map(x=>`<div class="sticky">${esc(x.v)}${x.nombre?`<small>${esc(x.nombre)}</small>`:''}</div>`).join(''):'<span class="empty">Todavía sin aportes</span>'}</div>`}).join('');
+}
+$('#reveal').onclick=()=>{const s=$('#s2');s.classList.toggle('show');$('#reveal').textContent=s.classList.contains('show')?'Ocultar respuestas':'Mostrar respuestas';render()};
+$('#copy').onclick=async()=>{const txt=Object.entries(Q).map(([k,q])=>`${k}. ${q[2]}\n`+(data.textos.filter(x=>x.q===k).map(x=>`- ${x.v}${x.nombre?` (${x.nombre})`:''}`).join('\n')||'- (sin aportes)')).join('\n\n');
+  try{await navigator.clipboard.writeText(txt);$('#copy').textContent='¡Copiado!';setTimeout(()=>$('#copy').textContent='Copiar para el formulario',2000)}catch(e){const o=$('#out');o.value=txt;o.classList.add('on');o.select()}};
+
+async function load(){
+  if(!API.startsWith('https://')){const m=$('#msg');m.textContent='Falta pegar la URL del Apps Script en panel.html (línea API).';m.style.display='block';return}
+  try{const r=await fetch(API,{cache:'no-store'});data=await r.json();$('#live').classList.remove('off');$('#msg').style.display='none';render()}
+  catch(e){$('#live').classList.add('off')}
+}
+render();load();setInterval(load,5000);
+</script>
+</body>
+</html>
